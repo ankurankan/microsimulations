@@ -34,6 +34,42 @@ t_max = 5 * 365.0
 seed = 42
 GROWTH_RATE_DECAY_RATE = 0    // decay rate of tumor growth
 
+function vectorAdd(x, y){
+	return x.map((e, i) => e + y[i]);
+}
+
+function scalerMult(x, y){
+	return y.map((e, i) => e * h);
+}
+
+function rk4(equation, initialCondition, start, stepSize, steps){
+	f = equation;
+	n = steps;
+	h = stepSize;
+	y = [initialCondition];
+	m = initialCondition.length;
+
+	t = start;
+	i = 0;
+
+	while(i < n){
+		yNext = [];
+		k1 = f(t, y[i]);
+		k2 = f(t + (0.5 * h), vectorAdd(y[i], scalerMult(0.5 * h, k1)));
+		k3 = f(t + (0.5 * h), vectorAdd(y[i], scalerMult(0.5 * h, k2)));
+		k4 = f(t + h, vectorAdd(y[i], scalerMult(h, k3)));
+		
+		for(k=0; k<m; k++){
+			yNext.push(y[i][k] + (h*(k1[k] + (2 * k2[k]) + (2 * k3[k]) + k4[k]) / 6));
+		}
+		console.log(yNext);
+		y.push(yNext);
+		t += h;
+		i++;
+	}
+	return y;
+};
+
 function tumormodel(x, dxdt, t){
 	T = x[0];
 	I = x[1];
