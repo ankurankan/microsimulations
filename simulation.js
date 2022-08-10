@@ -38,39 +38,57 @@ function vectorAdd(x, y){
 	return x.map((e, i) => e + y[i]);
 }
 
+function vectorSub(x, y){
+	return x.map((e, i) => e - y[i]);
+}
+
 function scalerMult(x, y){
 	return y.map((e, i) => e * x);
 }
 
-function rk4(equation, initialCondition, start, stepSize, steps){
+function array_sum(x){
+	partial = 0;
+	for (var i=0; i < x.length; i++){
+		partial += x[i];
+	}
+	return partial;
+}
+
+function distance(x, y){
+	sq_diff = vectorSub(x, y).map((e, i) => e**2);
+	return Math.sqrt(array_sum(sq_diff));
+}
+
+function rk4_integrate(equation, initialCondition, start, stepSize, steps){
 	f = equation;
 	n = steps;
 	h = stepSize;
-	y = [initialCondition];
+	y0 = initialCondition;
 	m = initialCondition.length;
 
 	t = start;
 	i = 0;
+	integrate = 0;
 
 	while(i < n){
-		yNext = [];
-		k1 = f(t, y[i]);
-		k2 = f(t + (0.5 * h), vectorAdd(y[i], scalerMult(0.5 * h, k1)));
-		k3 = f(t + (0.5 * h), vectorAdd(y[i], scalerMult(0.5 * h, k2)));
-		k4 = f(t + h, vectorAdd(y[i], scalerMult(h, k3)));
+		y = [];
+		k1 = f(t, y0);
+		k2 = f(t + (0.5 * h), vectorAdd(y0, scalerMult(0.5 * h, k1)));
+		k3 = f(t + (0.5 * h), vectorAdd(y0, scalerMult(0.5 * h, k2)));
+		k4 = f(t + h, vectorAdd(y0, scalerMult(h, k3)));
 		
 		for(k=0; k<m; k++){
-			yNext.push(y[i][k] + (h*(k1[k] + (2 * k2[k]) + (2 * k3[k]) + k4[k]) / 6));
+			y.push(y0[k] + (h*(k1[k] + (2 * k2[k]) + (2 * k3[k]) + k4[k]) / 6));
 		}
-		console.log(yNext);
-		y.push(yNext);
+		integrate += distance(y, y0) * h;
+		y0 = y;
 		t += h;
 		i++;
 	}
-	return y;
+	return integrate;
 };
 
-function tumormodel(x, dxdt, t){
+function tumormodel(t, x){
 	T = x[0];
 	I = x[1];
 	S = x[2];
@@ -105,16 +123,17 @@ function tumormodel(x, dxdt, t){
         	growth *= LOWER_GROWTH;
 	}
 
+	dxdt = []
 	if ( T < 1){
-		dxdt[0] = -T;
+		dxdt.push(-T);
 	}
 	else{
-		dxdt[0] = growth * Math.pow(T, GROWTH_EXPONENT) - killing;
+		dxdt.push(growth * Math.pow(T, GROWTH_EXPONENT) - killing);
 	}
 
-	dxdt[1] = S - delta*I;           // TILs
-	dxdt[2] = t_cell_activation;     // specific T cells
-	dxdt[3] = - t_cell_activation;   // naive T cells
+	dxdt.push(S - delta*I);           // TILs
+	dxdt.push(t_cell_activation);     // specific T cells
+	dxdt.push(- t_cell_activation);   // naive T cells
 
 	return (dxdt)
 }
@@ -126,5 +145,5 @@ function get_survival(R, raise_killing){
 	DEAD_AT = Infinity;
 
 	x = [1.0, 0.0, 0.0, 1e6];
-
+	return(rk4_integrate(tumormodel, x, 0, 1, 1000));
 }
