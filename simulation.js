@@ -39,7 +39,7 @@ function vectorAdd(x, y){
 }
 
 function scalerMult(x, y){
-	return y.map((e, i) => e * h);
+	return y.map((e, i) => e * x);
 }
 
 function rk4(equation, initialCondition, start, stepSize, steps){
