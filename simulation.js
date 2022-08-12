@@ -173,5 +173,11 @@ function get_survival(R, raise_killing){
 	DEAD_AT = Infinity;
 
 	x = [1.0, 0.0, 0.0, 1e6];
-	return(rk4(tumormodel, x, 0, 1, 1000));
+	simulated_values = rk4(tumormodel, x, 0, 0.1, t_max/0.1);
+	if (DIAGNOSED_AT < t_max){
+		return ((DEAD_AT - DIAGNOSED_AT)/30.4);
+	}
+	else {
+		return (Infinity);
+	}
 }
