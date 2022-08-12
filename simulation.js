@@ -34,18 +34,37 @@ t_max = 5 * 365.0
 seed = 42
 GROWTH_RATE_DECAY_RATE = 0    // decay rate of tumor growth
 
+/**
+ * Returns the elementwise sum of arrays x and y.
+ * @param {Array} x
+ * @param {Array} y
+ */
 function vectorAdd(x, y){
 	return x.map((e, i) => e + y[i]);
 }
 
+/**
+ * Returns the elementwise difference of arrays x and y.
+ * @param {Array} x
+ * @param {Array} y
+ */
 function vectorSub(x, y){
 	return x.map((e, i) => e - y[i]);
 }
 
+/**
+ * Returns the elementwise product of arrays x and y.
+ * @param {Array} x
+ * @param {Array} y
+ */
 function scalerMult(x, y){
 	return y.map((e, i) => e * x);
 }
 
+/**
+ * Returns the sum of all elements of array x.
+ * @param {Array} x
+ */
 function array_sum(x){
 	partial = 0;
 	for (var i=0; i < x.length; i++){
@@ -54,38 +73,47 @@ function array_sum(x){
 	return partial;
 }
 
+/**
+ * Computes the Euclidean distance between points x and y
+ * @param {Array} x
+ * @param {Array} y
+ */
 function distance(x, y){
 	sq_diff = vectorSub(x, y).map((e, i) => e**2);
 	return Math.sqrt(array_sum(sq_diff));
 }
 
-function rk4_integrate(equation, initialCondition, start, stepSize, steps){
-	f = equation;
-	n = steps;
-	h = stepSize;
-	y0 = initialCondition;
-	m = initialCondition.length;
-
-	t = start;
+/**
+ * Appoximate the value of y in the differential equation dy/dt at t=(start+stepSize*steps) given value at t0 using Runge-Kutta method.
+ * @param {function} f: Differential equation which returns the value of dy/dt
+ * @param {Array} y0: The value of the function at t0. 
+ * @param {float} t0: The initial value of t.
+ * @param {float} step_size: The step size to take in each iteration.
+ * @param {int} n_steps: Number of steps.
+ */
+function rk4(f, y0, t0, step_size, n_steps){
+	t = t0;
 	i = 0;
-	integrate = 0;
+	y_history = [y0];
 
-	while(i < n){
+	while(i < n_steps){
 		y = [];
 		k1 = f(t, y0);
-		k2 = f(t + (0.5 * h), vectorAdd(y0, scalerMult(0.5 * h, k1)));
-		k3 = f(t + (0.5 * h), vectorAdd(y0, scalerMult(0.5 * h, k2)));
-		k4 = f(t + h, vectorAdd(y0, scalerMult(h, k3)));
+		k2 = f(t + (0.5 * step_size), vectorAdd(y0, scalerMult(0.5 * step_size, k1)));
+		k3 = f(t + (0.5 * step_size), vectorAdd(y0, scalerMult(0.5 * step_size, k2)));
+		k4 = f(t + step_size, vectorAdd(y0, scalerMult(step_size, k3)));
 		
-		for(k=0; k<m; k++){
-			y.push(y0[k] + (h*(k1[k] + (2 * k2[k]) + (2 * k3[k]) + k4[k]) / 6));
+		for(k=0; k<y0.length; k++){
+			y.push(y0[k] + (step_size*(k1[k] + (2 * k2[k]) + (2 * k3[k]) + k4[k]) / 6));
 		}
-		integrate += distance(y, y0) * h;
+
 		y0 = y;
-		t += h;
+		y_history.push(y0);
+
+		t += step_size;
 		i++;
 	}
-	return integrate;
+	return (y_history);
 };
 
 function tumormodel(t, x){
@@ -145,5 +173,5 @@ function get_survival(R, raise_killing){
 	DEAD_AT = Infinity;
 
 	x = [1.0, 0.0, 0.0, 1e6];
-	return(rk4_integrate(tumormodel, x, 0, 1, 1000));
+	return(rk4(tumormodel, x, 0, 1, 1000));
 }
