@@ -3,21 +3,27 @@ var margin = {top: 30, right: 30, bottom: 30, left: 50},
     width = 460 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
+
+var R_mu = document.getElementById('R_mu').value
+var R_sigma = document.getElementById('R_sigma').value
+var raise_killing = document.getElementById('raise_killing').value
+
+var d1 = prop_survival(R_mu, R_sigma, raise_killing, 100)
+
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz")
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
+  	    .append("svg")
+    	    .attr("width", width + margin.left + margin.right)
+    	    .attr("height", height + margin.top + margin.bottom)
+  	    .append("g")
+    	    .attr("transform",
+          	"translate(" + margin.left + "," + margin.top + ")");
 
-// get the data
-d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/1_OneNum.csv", function(data) {
-
+function plot(data) {
   // add the x Axis
+  svg.selectAll("*").remove();
   var x = d3.scaleLinear()
-            .domain([0, 1000])
+            .domain([0, 25])
             .range([0, width]);
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -26,70 +32,42 @@ d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_data
   // add the y Axis
   var y = d3.scaleLinear()
             .range([height, 0])
-            .domain([0, 0.01]);
+            .domain([0, 1.0]);
   svg.append("g")
       .call(d3.axisLeft(y));
-
-  // Compute kernel density estimation
-  var kde = kernelDensityEstimator(kernelEpanechnikov(7), x.ticks(40))
-  var density =  kde( data.map(function(d){  return d.price; }) )
 
   // Plot the area
   var curve = svg
     .append('g')
     .append("path")
       .attr("class", "mypath")
-      .datum(density)
-      .attr("fill", "#69b3a2")
-      .attr("opacity", ".8")
+      .datum(data)
+      .attr("fill", "#none")
       .attr("stroke", "#000")
       .attr("stroke-width", 1)
-      .attr("stroke-linejoin", "round")
       .attr("d",  d3.line()
-        .curve(d3.curveBasis)
           .x(function(d) { return x(d[0]); })
           .y(function(d) { return y(d[1]); })
       );
+};
 
-  // A function that update the chart when slider is moved?
-  function updateChart(binNumber) {
-    // recompute density estimation
-    kde = kernelDensityEstimator(kernelEpanechnikov(7), x.ticks(binNumber))
-    density =  kde( data.map(function(d){  return d.price; }) )
-    console.log(binNumber)
-    console.log(density)
+d3.select("#R_mu").on("change", function(d){
+	R_mu = this.value
+	new_data = prop_survival(R_mu, R_sigma, raise_killing, 100)
+	plot(new_data)
+})
 
-    // update the chart
-    curve
-      .datum(density)
-      .transition()
-      .duration(1000)
-      .attr("d",  d3.line()
-        .curve(d3.curveBasis)
-          .x(function(d) { return x(d[0]); })
-          .y(function(d) { return y(d[1]); })
-      );
-  }
-
-  // Listen to the slider?
-  d3.select("#R_mu").on("change", function(d){
-    selectedValue = this.value
-    updateChart(selectedValue)
-  })
-
-});
+d3.select("#R_sigma").on("change", function(d){
+	R_sigma = this.value
+	new_data = prop_survival(R_mu, R_sigma, raise_killing, 100)
+	plot(new_data)
+})
 
 
-// Function to compute density
-function kernelDensityEstimator(kernel, X) {
-  return function(V) {
-    return X.map(function(x) {
-      return [x, d3.mean(V, function(v) { return kernel(x - v); })];
-    });
-  };
-}
-function kernelEpanechnikov(k) {
-  return function(v) {
-    return Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0;
-  };
-}
+d3.select("#raise_killing").on("change", function(d){
+	raise_killing = this.value
+	new_data = prop_survival(R_mu, R_sigma, raise_killing, 100)
+	plot(new_data)
+})
+
+plot(d1);
