@@ -74,6 +74,15 @@ function array_sum(x){
 }
 
 /**
+ * Compare each value of x to y. Returns true for each i if x[i] < y
+ * @param {Array} x
+ * @param y
+ */
+function vectorCompare(x, y){
+	return x.map((e, i) => e > y);
+}
+
+/**
  * Computes the Euclidean distance between points x and y
  * @param {Array} x
  * @param {Array} y
@@ -186,4 +195,17 @@ function population_survival(R_mu, R_sigma, raise_killing, n){
 	r_values = Array.from({length: n}, d3.randomLogNormal(R_mu, R_sigma));
 	r_values.map((e, i) => get_survival(e, raise_killing));
 	return(r_values);
+}
+
+function prop_survival(R_mu, R_sigma, raise_killing, n){
+	survival_values = population_survival(R_mu, R_sigma, raise_killing, n);
+	console.log(survival_values)
+	p_survival = [];
+	t = 0;
+	max_t = 24;
+	while (t <= max_t){
+		p_survival.push((array_sum(vectorCompare(survival_values, t))/survival_values.length));
+		t += 0.1;
+	}
+	return (p_survival);
 }
