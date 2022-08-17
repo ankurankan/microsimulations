@@ -199,12 +199,11 @@ function population_survival(R_mu, R_sigma, raise_killing, n){
 
 function prop_survival(R_mu, R_sigma, raise_killing, n){
 	survival_values = population_survival(R_mu, R_sigma, raise_killing, n);
-	console.log(survival_values)
 	p_survival = [];
 	t = 0;
 	max_t = 24;
 	while (t <= max_t){
-		p_survival.push((array_sum(vectorCompare(survival_values, t))/survival_values.length));
+		p_survival.push([t, (array_sum(vectorCompare(survival_values, t))/survival_values.length)]);
 		t += 0.1;
 	}
 	return (p_survival);
