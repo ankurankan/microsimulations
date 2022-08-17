@@ -181,3 +181,9 @@ function get_survival(R, raise_killing){
 		return (Infinity);
 	}
 }
+
+function population_survival(R_mu, R_sigma, raise_killing, n){
+	r_values = Array.from({length: n}, d3.randomLogNormal(R_mu, R_sigma));
+	r_values.map((e, i) => get_survival(e, raise_killing));
+	return(r_values);
+}
