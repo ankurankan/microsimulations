@@ -1,9 +1,21 @@
 <html>
 	<meta charset="utf-8">
 	<div id="my_dataviz"></div>
+	R meanlog:
 	<input type="range" name="R_mu" id=R_mu min="1" max="20" value="5">
+	<br></br>
+	R sdlog:
 	<input type="range" name="R_sigma" id=R_sigma min="1" max="20" value="3">
+	<br></br>
+	raise killing value:
 	<input type="range" name="raise_killing" id=raise_killing min="1" max="20" value="1">
+	<br></br>
+	Chemotherapy:
+	<input type="range" name="chemo_effect" id=chemo_effect min="0" max="1" value="1">
+	<br></br>
+	No. of patients:
+	<input type="range" name="n_patients" id=n_patients min="20" max="1000" value="10">
+	<br></br>
 	<script src="https://d3js.org/d3.v7.min.js"></script>
 	<script src="./simulation.js"></script>
 	<script src="./plot.js"></script>

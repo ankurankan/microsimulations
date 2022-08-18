@@ -191,8 +191,9 @@ function get_survival(R, raise_killing){
 	}
 }
 
-function population_survival(R_mu, R_sigma, raise_killing, n){
+function population_survival(R_mu, R_sigma, raise_killing, chemo_effect, n){
 	r_values = Array.from({length: n}, d3.randomLogNormal(R_mu, R_sigma));
+	r_values = scalerMult(chemo_effect, r_values);
 	r_values.map((e, i) => get_survival(e, raise_killing));
 	return(r_values);
 }

@@ -7,6 +7,7 @@ var margin = {top: 30, right: 30, bottom: 30, left: 50},
 var R_mu = document.getElementById('R_mu').value
 var R_sigma = document.getElementById('R_sigma').value
 var raise_killing = document.getElementById('raise_killing').value
+var n_patients = document.getElementById('n_patients').value
 
 var d1 = [[0,1], [10,.9], [20,.85]]
 
@@ -69,25 +70,29 @@ function plot(data_placebo, data_treat) {
 
 d3.select("#R_mu").on("change", function(d){
 	R_mu = this.value
-	plot_pop(R_mu, R_sigma, raise_killing)
+	plot_pop(R_mu, R_sigma, raise_killing, n_patients)
 })
 
 d3.select("#R_sigma").on("change", function(d){
 	R_sigma = this.value
-	plot_pop(R_mu, R_sigma, raise_killing)
+	plot_pop(R_mu, R_sigma, raise_killing, n_patients)
 })
 
 
 d3.select("#raise_killing").on("change", function(d){
 	raise_killing = this.value
-	plot_pop(R_mu, R_sigma, raise_killing)
+	plot_pop(R_mu, R_sigma, raise_killing, n_patients)
 }) 
 
-function plot_pop(R_mu, R_sigma, raise_killing){
+d3.select("#n_patients").on("change", function(d){
+	n_patients = this.value
+	plot_pop(R_mu, R_sigma, raise_killing, n_patients)
+})
+
+function plot_pop(R_mu, R_sigma, raise_killing, n){
 	console.log(R_mu)
 	console.log(R_sigma)
 	console.log(raise_killing)
-	let n_left = 500
 	let death_times_treat = []
 	let death_times_placebo = []
 	
@@ -112,7 +117,7 @@ function plot_pop(R_mu, R_sigma, raise_killing){
 		}
 
 		plot(d1, d2);
-		if( --n_left > 0 ){
+		if( --n > 0 ){
 			setTimeout( get_next_patient, 0 )
 		} else {
 			console.log( death_times_treat )
@@ -121,4 +126,4 @@ function plot_pop(R_mu, R_sigma, raise_killing){
 	get_next_patient()
 }
 
-plot_pop(R_mu, R_sigma, raise_killing)
+plot_pop(R_mu, R_sigma, raise_killing, n_patients)
