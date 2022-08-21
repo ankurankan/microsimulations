@@ -97,10 +97,10 @@ function plot_pop(R_mu, R_sigma, raise_killing, n){
 	let death_times_placebo = []
 	
 	function get_next_patient(){
-		let d_treat = population_survival( R_mu, R_sigma, raise_killing, 1 )
+		let d_treat = population_survival( R_mu, R_sigma, raise_killing, 1, 1 )
 		death_times_treat.push( parseFloat(d_treat[0]) )
 
-		let d_placebo = population_survival(R_mu, R_sigma, 1, 1)
+		let d_placebo = population_survival(R_mu, R_sigma, 1, 1, 1)
 		death_times_placebo.push( parseFloat(d_placebo[0]) )
 		//console.log( d )
 	
@@ -115,7 +115,6 @@ function plot_pop(R_mu, R_sigma, raise_killing, n){
 		for( let i = 0 ; i < death_times_placebo.length ; i ++ ){
 			d2.push( [death_times_placebo[i],1-(i+1)/death_times_placebo.length] )
 		}
-
 		plot(d1, d2);
 		if( --n > 0 ){
 			setTimeout( get_next_patient, 0 )
