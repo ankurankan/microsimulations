@@ -29,7 +29,7 @@ CHEMO_START = 0
 DRIFT_XI = 0
 DRIFT_R = 0
 
-t_max = 5 * 365.0
+t_max = 1 * 365.0
 
 seed = 42
 GROWTH_RATE_DECAY_RATE = 0    // decay rate of tumor growth
@@ -107,11 +107,15 @@ function rk4(f, y0, t0, step_size, n_steps){
 
 	while(i < n_steps){
 		y = [];
+		// k1 = f(t, y0)
 		k1 = f(t, y0);
+		// k2 = f(t + 1/2 dt, y0 + 1/2 dt k1)
 		k2 = f(t + (0.5 * step_size), vectorAdd(y0, scalerMult(0.5 * step_size, k1)));
+		// k3 = f(t + 1/2 dt, y0 + 1/2 dt k2)
 		k3 = f(t + (0.5 * step_size), vectorAdd(y0, scalerMult(0.5 * step_size, k2)));
+		// k4 = f(t + dt, y0 + dt k3)
 		k4 = f(t + step_size, vectorAdd(y0, scalerMult(step_size, k3)));
-		
+
 		for(k=0; k<y0.length; k++){
 			y.push(y0[k] + (step_size*(k1[k] + (2 * k2[k]) + (2 * k3[k]) + k4[k]) / 6));
 		}
@@ -125,11 +129,41 @@ function rk4(f, y0, t0, step_size, n_steps){
 	return (y_history);
 };
 
+function rk4_boost(f, y0, t0, step_size, n_step){
+	t = t0;
+	i = 0;
+	y_history = [y0];
+
+	dt = step_size;
+	dh = stpe_size/2;
+	th = t + dh;
+
+	while(i < n_steps){
+		y = [];	
+		k1 = f(t_n, y_n);
+		k2 = f(t_n + c_2 h, y_n+h(a_21 k_1))
+		k3 = f(t_n + c_3 h, y_n+h(a_31 k_1 + a_32 k_2))
+
+
+		for(k=0; k<y0.length; k++){
+			y.push(y0[k] + (step_size*(k1[k] + (2 * k2[k]) + (2 * k3[k]) + k4[k]) / 6));
+		}
+
+		y0 = y;
+		y_history.push(y0);
+
+		t += step_size;
+		i++;
+	}
+	return (y_history);
+}
+
 function tumormodel(t, x){
 	T = x[0];
 	I = x[1];
 	S = x[2];
 	N = x[3];
+	console.log(T)
 
 	t_cell_activation = alpha * ( T / (1e7 + T) ) * N;
 
@@ -182,7 +216,7 @@ function get_survival(R, raise_killing){
 	DEAD_AT = Infinity;
 
 	x = [1.0, 0.0, 0.0, 1e6];
-	simulated_values = rk4(tumormodel, x, 0, 0.1, t_max/0.1);
+	simulated_values = rk4(tumormodel, x, 0, 1, t_max/1);
 	if (DIAGNOSED_AT < t_max){
 		return ((DEAD_AT - DIAGNOSED_AT)/30.4);
 	}
