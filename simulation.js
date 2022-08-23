@@ -129,25 +129,31 @@ function rk4(f, y0, t0, step_size, n_steps){
 	return (y_history);
 };
 
-function rk4_boost(f, y0, t0, step_size, n_step){
+function rk4_boost(f, y0, t0, step_size, n_steps){
 	t = t0;
 	i = 0;
 	y_history = [y0];
 
 	dt = step_size;
-	dh = stpe_size/2;
+	dh = step_size/2;
 	th = t + dh;
 
 	while(i < n_steps){
-		y = [];	
-		k1 = f(t_n, y_n);
-		k2 = f(t_n + c_2 h, y_n+h(a_21 k_1))
-		k3 = f(t_n + c_3 h, y_n+h(a_31 k_1 + a_32 k_2))
+		// e1 = y_n
+		e1 = y0;
+		// e2 = y_n + h/2 f(t_n, e1)
+		e2 = vectorAdd(y0, scalerMult(dh, f(t, e1)));
+		// e3 = y_n + h/2 f(t_n + h/2, e2)
+		e3 = vectorAdd(y0, scalerMult(dh, f(t+dh, e2)));
+		// e4 = y_n + h f(t_n + h/2, e3)
+		e4 = vectorAdd(y0, scalerMult(dt, f(t+dh, e3)));
 
+		k1 = scalerMult(1/6, f(t, e1));
+		k2 = scalerMult(1/3, f(t+dh, e2));
+		k3 = scalerMult(1/3, f(t+dh, e3));
+		k4 = scalerMult(1/6, f(t+dt, e4));
 
-		for(k=0; k<y0.length; k++){
-			y.push(y0[k] + (step_size*(k1[k] + (2 * k2[k]) + (2 * k3[k]) + k4[k]) / 6));
-		}
+		y = vectorAdd(y0, scalerMult(dt, vectorAdd(vectorAdd(vectorAdd(k1, k2), k3), k4)));
 
 		y0 = y;
 		y_history.push(y0);
