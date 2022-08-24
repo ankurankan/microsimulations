@@ -11,10 +11,10 @@
 	<input type="range" name="raise_killing" id=raise_killing min="1" max="20" value="1">
 	<br></br>
 	Chemotherapy Effect:
-	<input type="range" name="chemo_effect" id=chemo_effect min="0" max="1" value="1">
+	<input type="range" name="chemo_effect" id=chemo_effect min="0" max="10" value="10">
 	<br></br>
 	No. of patients:
-	<input type="range" name="n_patients" id=n_patients min="20" max="1000" value="10">
+	<input type="range" name="n_patients" id=n_patients min="20" max="1000" value="100">
 	<br></br>
 	<button type='button', name='download_raw', id='download_raw', onclick="downloadBlob(survival_to_csv(death_times_treat, death_times_placebo), 'export_raw.csv', 'text/csv;charset=utf-8;')"> Download Raw Data </button>
 	<button type='button', name='download_prop', id='download_prop', onclick="downloadBlob(km_to_csv(d1, d2), 'export_km.csv', 'text/csv;charset=utf-8;')"> Download KM Data </button>

@@ -214,9 +214,10 @@ function tumormodel(t, x){
 	return (dxdt)
 }
 
-function get_survival(R, raise_killing){
+function get_survival(R, raise_killing, chemo_effect){
 	R_R_0 = R;
 	RAISE_KILLING = raise_killing;
+	LOWER_GROWTH = chemo_effect;
 	DIAGNOSED_AT = Infinity;
 	DEAD_AT = Infinity;
 
@@ -232,8 +233,7 @@ function get_survival(R, raise_killing){
 
 function population_survival(R_mu, R_sigma, raise_killing, chemo_effect, n){
 	r_values = Array.from({length: n}, d3.randomLogNormal(R_mu, R_sigma));
-	r_values = scalerMult(chemo_effect, r_values);
-	r_values.map((e, i) => get_survival(e, raise_killing));
+	r_values.map((e, i) => get_survival(e, raise_killing, chemo_effect));
 	return(r_values);
 }
 

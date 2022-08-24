@@ -7,6 +7,7 @@ var margin = {top: 30, right: 30, bottom: 30, left: 50},
 var R_mu = document.getElementById('R_mu').value
 var R_sigma = document.getElementById('R_sigma').value
 var raise_killing = document.getElementById('raise_killing').value
+var chemo_effect = document.getElementById('chemo_effect').value
 var n_patients = document.getElementById('n_patients').value
 
 var d1 = [[0,1], [10,.9], [20,.85]]
@@ -70,60 +71,66 @@ function plot(data_placebo, data_treat) {
 
 d3.select("#R_mu").on("change", function(d){
 	R_mu = this.value
-	plot_pop(R_mu, R_sigma, raise_killing, n_patients)
+	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 
 d3.select("#R_sigma").on("change", function(d){
 	R_sigma = this.value
-	plot_pop(R_mu, R_sigma, raise_killing, n_patients)
+	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 
 
 d3.select("#raise_killing").on("change", function(d){
 	raise_killing = this.value
-	plot_pop(R_mu, R_sigma, raise_killing, n_patients)
-}) 
+	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+})
+
+d3.select("#chemo_effect").on("change", function(d){
+	chemo_effect = this.value/10;
+	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+})
 
 d3.select("#n_patients").on("change", function(d){
 	n_patients = this.value
-	plot_pop(R_mu, R_sigma, raise_killing, n_patients)
+	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 
-function plot_pop(R_mu, R_sigma, raise_killing, n){
+function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 	console.log(R_mu)
 	console.log(R_sigma)
 	console.log(raise_killing)
-	let death_times_treat = []
-	let death_times_placebo = []
+	console.log(chemo_effect)
+	console.log(n)
+	let death_times_treat = [];
+	let death_times_placebo = [];
 	
 	function get_next_patient(){
-		let d_treat = population_survival( R_mu, R_sigma, raise_killing, 1, 1 )
-		death_times_treat.push( parseFloat(d_treat[0]) )
+		let d_treat = population_survival( R_mu, R_sigma, raise_killing, chemo_effect, 1 );
+		death_times_treat.push( parseFloat(d_treat[0]) );
 
-		let d_placebo = population_survival(R_mu, R_sigma, 1, 1, 1)
-		death_times_placebo.push( parseFloat(d_placebo[0]) )
-		//console.log( d )
+		let d_placebo = population_survival(R_mu, R_sigma, 1, 1, 1);
+		death_times_placebo.push( parseFloat(d_placebo[0]) );
 	
-		death_times_treat = death_times_treat.sort((a,b) => a - b)
+		death_times_treat = death_times_treat.sort((a,b) => a - b);
 		d1 = [[0,1]];
 		for( let i = 0 ; i < death_times_treat.length ; i ++ ){
-			d1.push( [death_times_treat[i],1-(i+1)/death_times_treat.length] )
+			d1.push( [death_times_treat[i],1-(i+1)/death_times_treat.length] );
 		}
 		
-		death_times_placebo = death_times_placebo.sort((a,b) => a - b)
+		death_times_placebo = death_times_placebo.sort((a,b) => a - b);
 		d2 = [[0,1]];
 		for( let i = 0 ; i < death_times_placebo.length ; i ++ ){
-			d2.push( [death_times_placebo[i],1-(i+1)/death_times_placebo.length] )
+			d2.push( [death_times_placebo[i],1-(i+1)/death_times_placebo.length] );
 		}
 		plot(d1, d2);
 		if( --n > 0 ){
-			setTimeout( get_next_patient, 0 )
+			setTimeout( get_next_patient, 0 );
 		} else {
-			console.log( death_times_treat )
+			console.log( death_times_treat );
 		}
 	}
-	get_next_patient()
-	return [death_times_treat, death_times_placebo]
+	get_next_patient();
+	return [death_times_treat, death_times_placebo];
 }
 
-[death_times_treat, death_times_placebo] = plot_pop(R_mu, R_sigma, raise_killing, n_patients)
+[death_times_treat, death_times_placebo] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients)
