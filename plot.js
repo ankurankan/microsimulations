@@ -123,6 +123,7 @@ function plot_pop(R_mu, R_sigma, raise_killing, n){
 		}
 	}
 	get_next_patient()
+	return [death_times_treat, death_times_placebo]
 }
 
-plot_pop(R_mu, R_sigma, raise_killing, n_patients)
+[death_times_treat, death_times_placebo] = plot_pop(R_mu, R_sigma, raise_killing, n_patients)

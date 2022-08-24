@@ -16,7 +16,10 @@
 	No. of patients:
 	<input type="range" name="n_patients" id=n_patients min="20" max="1000" value="10">
 	<br></br>
+	<button type='button', name='download_raw', id='download_raw', onclick="downloadBlob(survival_to_csv(death_times_treat, death_times_placebo), 'export_raw.csv', 'text/csv;charset=utf-8;')"> Download Raw Data </button>
+	<button type='button', name='download_prop', id='download_prop', onclick="downloadBlob(km_to_csv(d1, d2), 'export_km.csv', 'text/csv;charset=utf-8;')"> Download KM Data </button>
 	<script src="https://d3js.org/d3.v7.min.js"></script>
 	<script src="./simulation.js"></script>
 	<script src="./plot.js"></script>
+	<script src="./download.js"></script>
 </html>
