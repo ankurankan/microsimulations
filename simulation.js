@@ -29,7 +29,7 @@ CHEMO_START = 0
 DRIFT_XI = 0
 DRIFT_R = 0
 
-t_max = 1 * 365.0
+t_max = 5 * 365.0
 
 seed = 42
 GROWTH_RATE_DECAY_RATE = 0    // decay rate of tumor growth
@@ -169,7 +169,6 @@ function tumormodel(t, x){
 	I = x[1];
 	S = x[2];
 	N = x[3];
-	console.log(T)
 
 	t_cell_activation = alpha * ( T / (1e7 + T) ) * N;
 
