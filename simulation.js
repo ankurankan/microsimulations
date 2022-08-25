@@ -233,8 +233,8 @@ function get_survival(R, raise_killing, chemo_effect){
 
 function population_survival(R_mu, R_sigma, raise_killing, chemo_effect, n){
 	r_values = Array.from({length: n}, d3.randomLogNormal(R_mu, R_sigma));
-	r_values.map((e, i) => get_survival(e, raise_killing, chemo_effect));
-	return(r_values);
+	survival_values = r_values.map((e, i) => get_survival(e, raise_killing, chemo_effect));
+	return(survival_values);
 }
 
 function prop_survival(R_mu, R_sigma, raise_killing, n){

@@ -1,4 +1,7 @@
 // set the dimensions and margins of the graph
+
+const MAX_X_VALUE = 25; // Max time in months to plot
+
 var margin = {top: 30, right: 30, bottom: 30, left: 50},
     width = 460 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
@@ -24,7 +27,7 @@ function plot(data_placebo, data_treat) {
   // add the x Axis
   svg.selectAll("*").remove();
   var x = d3.scaleLinear()
-            .domain([0, 25])
+            .domain([0, MAX_X_VALUE])
             .range([0, width]);
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -105,11 +108,6 @@ d3.select("#n_patients").on("change", function(d){
 })
 
 function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
-	console.log(R_mu)
-	console.log(R_sigma)
-	console.log(raise_killing)
-	console.log(chemo_effect)
-	console.log(n)
 	let death_times_treat = [];
 	let death_times_placebo = [];
 	
@@ -123,14 +121,20 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 		death_times_treat = death_times_treat.sort((a,b) => a - b);
 		d1 = [[0,1]];
 		for( let i = 0 ; i < death_times_treat.length ; i ++ ){
-			d1.push( [death_times_treat[i],1-(i+1)/death_times_treat.length] );
+			if (death_times_treat[i] < MAX_X_VALUE){
+				d1.push( [death_times_treat[i],1-(i+1)/death_times_treat.length] );
+			}
 		}
+		d1.push([MAX_X_VALUE, array_sum(death_times_treat.map(i => i > MAX_X_VALUE? 1: 0))/death_times_treat.length]);
 		
 		death_times_placebo = death_times_placebo.sort((a,b) => a - b);
 		d2 = [[0,1]];
 		for( let i = 0 ; i < death_times_placebo.length ; i ++ ){
-			d2.push( [death_times_placebo[i],1-(i+1)/death_times_placebo.length] );
+			if (death_times_placebo[i] < MAX_X_VALUE){
+				d2.push( [death_times_placebo[i],1-(i+1)/death_times_placebo.length] );
+			}
 		}
+		d2.push([MAX_X_VALUE, array_sum(death_times_placebo.map(i => i > MAX_X_VALUE? 1: 0))/death_times_placebo.length]);
 		plot(d1, d2);
 		if( --n > 0 ){
 			setTimeout( get_next_patient, 0 );
