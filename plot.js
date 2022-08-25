@@ -21,6 +21,21 @@ var svg = d3.select("#my_dataviz")
     	    .attr("transform",
           	"translate(" + margin.left + "," + margin.top + ")");
 
+var svg_progress = d3.select("#progress_bar")
+	    .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", 20);
+
+svg_progress.append('rect')
+	.attr('class', 'bg-rect')
+	.attr('rx', 10)
+	.attr('ry', 10)
+	.attr('fill', 'green')
+	.attr('height', 15)
+	.attr('width', width)
+	.attr('x', 5)
+	.style("opacity", 0.6);
+
 function plot(data_placebo, data_treat) {
   // add the x Axis
   svg.selectAll("*").remove();
@@ -150,6 +165,7 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 		plot(d1, d2);
 		if( --n > 0 ){
 			setTimeout( get_next_patient, 0 );
+			svg_progress.attr('width', ((n_patients-n)/n_patients)*width);
 		} else {
 			console.log( death_times_treat );
 		}
