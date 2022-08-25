@@ -21,22 +21,7 @@ var svg = d3.select("#my_dataviz")
     	    .attr("transform",
           	"translate(" + margin.left + "," + margin.top + ")");
 
-var svg_progress = d3.select("#progress_bar")
-	    .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", 20);
-
-svg_progress.append('rect')
-	.attr('class', 'bg-rect')
-	.attr('rx', 10)
-	.attr('ry', 10)
-	.attr('fill', 'green')
-	.attr('height', 15)
-	.attr('width', width)
-	.attr('x', 5)
-	.style("opacity", 0.6);
-
-function plot(data_placebo, data_treat) {
+function plot(data_placebo, data_treat, data_progress) {
   // add the x Axis
   svg.selectAll("*").remove();
   var x = d3.scaleLinear()
@@ -101,6 +86,21 @@ function plot(data_placebo, data_treat) {
   	        .y(function(d) { return y(d[1]); })
   	    );
   }
+
+  var progress = svg
+	.append('g')
+	.append('path')
+	.attr('class', 'mypath')
+	.datum(data_progress)
+	.attr("fill", "none")
+	.attr("stroke", "green")
+	.attr("stroke-width", 5)
+	.style("opacity", 0.6)
+	.transition()
+	.attr("d", d3.line()
+		.x(function(d) { return x(d[0]); })
+		.y(function(d) { return y(d[1]); })
+	);
 };
 
 d3.select("#R_mu").on("change", function(d){
@@ -162,10 +162,10 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 			}
 		}
 		d2.push([MAX_X_VALUE, array_sum(death_times_placebo.map(i => i > MAX_X_VALUE? 1: 0))/death_times_placebo.length]);
-		plot(d1, d2);
+
+		plot(d1, d2, [[0, 1.05], [((n_patients-n)/n_patients)*MAX_X_VALUE, 1.05]]);
 		if( --n > 0 ){
 			setTimeout( get_next_patient, 0 );
-			svg_progress.attr('width', ((n_patients-n)/n_patients)*width);
 		} else {
 			console.log( death_times_treat );
 		}
