@@ -13,8 +13,6 @@ var raise_killing = document.getElementById('raise_killing').value
 var chemo_effect = document.getElementById('chemo_effect').value / 10
 var n_patients = document.getElementById('n_patients').value
 
-var d1 = [[0,1], [10,.9], [20,.85]]
-
 var svg = d3.select("#my_dataviz")
   	    .append("svg")
     	    .attr("width", width + margin.left + margin.right)
