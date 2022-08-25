@@ -2,7 +2,7 @@
 
 const MAX_X_VALUE = 25; // Max time in months to plot
 
-var margin = {top: 30, right: 30, bottom: 30, left: 50},
+var margin = {top: 30, right: 30, bottom: 50, left: 50},
     width = 460 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
@@ -33,12 +33,26 @@ function plot(data_placebo, data_treat) {
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
 
+  svg.append("text")
+	.attr("transform",
+	      "translate(" + (width/2) + " ," + (height + margin.top + 10) + ")")
+	.style("text-anchor", "middle")
+	.text("Time (Months)");
+
   // add the y Axis
   var y = d3.scaleLinear()
             .range([height, 0])
             .domain([0, 1.0]);
   svg.append("g")
       .call(d3.axisLeft(y));
+  
+  svg.append("text")
+	.attr("transform", "rotate(-90)")
+	.attr("y", 0 - margin.left)
+	.attr("x", 0 - (height/2))
+	.attr("dy", "1em")
+	.style("text-anchor", "middle")
+	.text("Proportion Alive");
 
   // Plot the area
   if (data_placebo != null){
