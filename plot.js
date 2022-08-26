@@ -62,7 +62,7 @@ function plot(data_placebo, data_treat, data_progress) {
   	    .attr("fill", "none")
   	    .attr("stroke", "blue")
   	    .attr("stroke-width", 2)
-	    .style("opacity", 0.6)
+	    .style("opacity", 0.5)
 	    .transition()
   	    .attr("d",  d3.line()
   	        .x(function(d) { return x(d[0]); })
@@ -79,7 +79,7 @@ function plot(data_placebo, data_treat, data_progress) {
   	    .attr("fill", "none")
   	    .attr("stroke", "red")
   	    .attr("stroke-width", 2)
-	    .style("opacity", 0.6)
+	    .style("opacity", 0.5)
 	    .transition()
   	    .attr("d",  d3.line()
   	        .x(function(d) { return x(d[0]); })
@@ -93,8 +93,8 @@ function plot(data_placebo, data_treat, data_progress) {
 	.attr('class', 'mypath')
 	.datum(data_progress)
 	.attr("fill", "none")
-	.attr("stroke", "green")
-	.attr("stroke-width", 5)
+	.attr("stroke", "#21CDFD")
+	.attr("stroke-width", 1)
 	.style("opacity", 0.6)
 	.transition()
 	.attr("d", d3.line()
@@ -158,7 +158,7 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 		}
 		d2.push([MAX_X_VALUE, array_sum(death_times_placebo.map(i => i > MAX_X_VALUE? 1: 0))/death_times_placebo.length]);
 
-		plot(d1, d2, [[0, 1.05], [((n_patients-n)/n_patients)*MAX_X_VALUE, 1.05]]);
+		plot(d1, d2, [[0, 1.01], [((n_patients-n)/n_patients)*MAX_X_VALUE, 1.01]]);
 		if( --n > 0 ){
 			setTimeout( get_next_patient, 0 );
 		} else {
