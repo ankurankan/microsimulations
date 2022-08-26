@@ -141,8 +141,16 @@ d3.select("#R_mu").on("change", function(d){
 	R_mu = this.value
 	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
+d3.select("#R_mu_value").on("change", function(d){
+	R_mu = this.value
+	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+})
 
 d3.select("#R_sigma").on("change", function(d){
+	R_sigma = this.value
+	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+})
+d3.select("#R_sigma_value").on("change", function(d){
 	R_sigma = this.value
 	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
@@ -152,13 +160,26 @@ d3.select("#raise_killing").on("change", function(d){
 	raise_killing = this.value
 	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
+d3.select("#imm_effect_value").on("change", function(d){
+	raise_killing = this.value
+	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+})
+
 
 d3.select("#chemo_effect").on("change", function(d){
 	chemo_effect = this.value/10;
 	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
+d3.select("#chemo_effect_value").on("change", function(d){
+	chemo_effect = this.value
+	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+})
 
 d3.select("#n_patients").on("change", function(d){
+	n_patients = this.value
+	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+})
+d3.select("#n_patients_value").on("change", function(d){
 	n_patients = this.value
 	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })

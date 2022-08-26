@@ -16,18 +16,18 @@
 			<th class="table_head"> No. of patients </th>
 		</tr>
 		<tr>
-			<td> <output id=R_mu_value> 5 </output> </td>
-			<td> <output id=R_sigma_value> 3 </output> </td>
-			<td> <output id=imm_effect_value> 1 </output> </td>
-			<td> <output id=chemo_effect_value> 1 </output> </td>
-			<td> <output id=n_patients_value> 100 </output> </td>
+			<td> <input type="text" id="R_mu_value" size=1 value=5 oninput="document.getElementById('R_mu').value=this.value"> </td>
+			<td> <input type="text" id="R_sigma_value" size=1 value=3 oninput="document.getElementById('R_sigma').value=this.value"> </td>
+			<td> <input type="text" id="imm_effect_value" size=1 value=1 oninput="document.getElementById('raise_killing').value=this.value"> </td>
+			<td> <input type="text" id="chemo_effect_value" size=1 value=1 oninput="document.getElementById('chemo_effect').value=this.value*10"> </td>
+			<td> <input type="text" id="n_patients_value" size=1 value=100 oninput="document.getElementById('n_patients').value=this.value"> </td>
 		</tr>
 		<tr>
-			<td> <input type="range" class="center" name="R_mu" id=R_mu min="1" max="20" value="5" oninput="document.getElementById('R_mu_value').innerHTML=this.value"> </td>
-			<td> <input type="range" class="center" name="R_sigma" id=R_sigma min="1" max="20" value="3" oninput="document.getElementById('R_sigma_value').innerHTML=this.value"> </td>
-			<td> <input type="range" class="center" name="raise_killing" id=raise_killing min="1" max="20" value="1" oninput="document.getElementById('imm_effect_value').innerHTML=this.value"> </td>
-			<td> <input type="range" class="center" name="chemo_effect" id=chemo_effect min="0" max="10" value="10" oninput="document.getElementById('chemo_effect_value').innerHTML=this.value/10"> </td>
-			<td> <input type="range" class="center" name="n_patients" id=n_patients min="20" max="1000" value="100" oninput="document.getElementById('n_patients_value').innerHTML=this.value"> </td>
+			<td> <input type="range" class="center" name="R_mu" id=R_mu min="1" max="20" value="5" oninput="document.getElementById('R_mu_value').value=this.value"> </td>
+			<td> <input type="range" class="center" name="R_sigma" id=R_sigma min="1" max="20" value="3" oninput="document.getElementById('R_sigma_value').value=this.value"> </td>
+			<td> <input type="range" class="center" name="raise_killing" id=raise_killing min="1" max="20" value="1" oninput="document.getElementById('imm_effect_value').value=this.value"> </td>
+			<td> <input type="range" class="center" name="chemo_effect" id=chemo_effect min="0" max="10" value="10" oninput="document.getElementById('chemo_effect_value').value=this.value/10"> </td>
+			<td> <input type="range" class="center" name="n_patients" id=n_patients min="20" max="1000" value="100" oninput="document.getElementById('n_patients_value').value=this.value"> </td>
 		</tr>
 		<tr style="height:50px"></tr>
 		<tr>
