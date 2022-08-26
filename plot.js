@@ -85,7 +85,7 @@ svg.append('text')
 	.text("Treatment");
 
 function plot(data_placebo, data_treat, data_progress) {
-  svg.selectAll('.mypath').remove();
+  svg.selectAll('.mypath, .mypath_prog').remove();
   // Plot the area
   if (data_placebo != null){
   	var placebo = svg
@@ -124,7 +124,7 @@ function plot(data_placebo, data_treat, data_progress) {
   var progress = svg
 	.append('g')
 	.append('path')
-	.attr('class', 'mypath')
+	.attr('class', 'mypath_prog')
 	.datum(data_progress)
 	.attr("fill", "none")
 	.attr("stroke", "#21CDFD")
@@ -217,10 +217,11 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 		if( --n > 0 ){
 			setTimeout( get_next_patient, 0 );
 		} else {
-			console.log( death_times_treat );
+			svg.selectAll('.mypath_prog').remove();
 		}
 	}
 	get_next_patient();
+
 	return [death_times_treat, death_times_placebo];
 }
 
