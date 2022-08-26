@@ -21,15 +21,13 @@ var svg = d3.select("#my_dataviz")
     	    .attr("transform",
           	"translate(" + margin.left + "," + margin.top + ")");
 
-function plot(data_placebo, data_treat, data_progress) {
   // add the x Axis
-  svg.selectAll("*").remove();
-  var x = d3.scaleLinear()
+  const x_ax = d3.scaleLinear()
             .domain([0, MAX_X_VALUE])
             .range([0, width]);
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom(x_ax));
 
   svg.append("text")
 	.attr("transform",
@@ -38,11 +36,11 @@ function plot(data_placebo, data_treat, data_progress) {
 	.text("Time (Months)");
 
   // add the y Axis
-  var y = d3.scaleLinear()
+  const y_ax = d3.scaleLinear()
             .range([height, 0])
             .domain([0, 1.0]);
   svg.append("g")
-      .call(d3.axisLeft(y));
+      .call(d3.axisLeft(y_ax));
   
   svg.append("text")
 	.attr("transform", "rotate(-90)")
@@ -52,6 +50,42 @@ function plot(data_placebo, data_treat, data_progress) {
 	.style("text-anchor", "middle")
 	.text("Proportion Alive");
 
+// Add legend
+svg.append('g')
+   .append('path')
+	.datum([[19, 0.9], [20, 0.9]])
+	.attr("fill", "none")
+	.attr("stroke", "blue")
+	.attr("stroke-width", 2)
+	.style("opacity", 0.5)
+	.attr("d", d3.line()
+		.x(function(d) { return x_ax(d[0]); })
+		.y(function(d) { return y_ax(d[1]); })
+	);
+svg.append('text')
+        .attr("x", 310)
+	.attr("y", 37)
+	.text("Placebo");
+
+svg.append('g')
+   .append('path')
+	.datum([[19, 0.8], [20, 0.8]])
+	.attr("fill", "none")
+	.attr("stroke", "red")
+	.attr("stroke-width", 2)
+	.style("opacity", 0.5)
+	.attr("d", d3.line()
+		.x(function(d) { return x_ax(d[0]); })
+		.y(function(d) { return y_ax(d[1]); })
+	);
+
+svg.append('text')
+        .attr("x", 310)
+	.attr("y", 68)
+	.text("Treatment");
+
+function plot(data_placebo, data_treat, data_progress) {
+  svg.selectAll('.mypath').remove();
   // Plot the area
   if (data_placebo != null){
   	var placebo = svg
@@ -65,8 +99,8 @@ function plot(data_placebo, data_treat, data_progress) {
 	    .style("opacity", 0.5)
 	    .transition()
   	    .attr("d",  d3.line()
-  	        .x(function(d) { return x(d[0]); })
-  	        .y(function(d) { return y(d[1]); })
+  	        .x(function(d) { return x_ax(d[0]); })
+  	        .y(function(d) { return y_ax(d[1]); })
   	    );
   }
 
@@ -82,8 +116,8 @@ function plot(data_placebo, data_treat, data_progress) {
 	    .style("opacity", 0.5)
 	    .transition()
   	    .attr("d",  d3.line()
-  	        .x(function(d) { return x(d[0]); })
-  	        .y(function(d) { return y(d[1]); })
+  	        .x(function(d) { return x_ax(d[0]); })
+  	        .y(function(d) { return y_ax(d[1]); })
   	    );
   }
 
@@ -98,8 +132,8 @@ function plot(data_placebo, data_treat, data_progress) {
 	.style("opacity", 0.6)
 	.transition()
 	.attr("d", d3.line()
-		.x(function(d) { return x(d[0]); })
-		.y(function(d) { return y(d[1]); })
+		.x(function(d) { return x_ax(d[0]); })
+		.y(function(d) { return y_ax(d[1]); })
 	);
 };
 
