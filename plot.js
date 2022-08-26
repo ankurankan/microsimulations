@@ -135,6 +135,12 @@ function plot(data_placebo, data_treat, data_progress) {
 		.x(function(d) { return x_ax(d[0]); })
 		.y(function(d) { return y_ax(d[1]); })
 	);
+
+  svg.append('text')
+	.attr('class', 'mypath_prog')
+	.attr('x', 150)
+	.attr('y', -10)
+	.text('Simulating')
 };
 
 d3.select("#R_mu").on("change", function(d){
