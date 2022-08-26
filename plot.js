@@ -105,32 +105,27 @@ function plot(data_placebo, data_treat, data_progress) {
 
 d3.select("#R_mu").on("change", function(d){
 	R_mu = this.value
-	document.getElementById('R_mu_value').innerHTML = R_mu;
 	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 
 d3.select("#R_sigma").on("change", function(d){
 	R_sigma = this.value
-	document.getElementById('R_sigma_value').innerHTML = R_sigma;
 	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 
 
 d3.select("#raise_killing").on("change", function(d){
 	raise_killing = this.value
-	document.getElementById('imm_effect_value').innerHTML = raise_killing;
 	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 
 d3.select("#chemo_effect").on("change", function(d){
 	chemo_effect = this.value/10;
-	document.getElementById('chemo_effect_value').innerHTML = chemo_effect;
 	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 
 d3.select("#n_patients").on("change", function(d){
 	n_patients = this.value
-	document.getElementById('n_patients_value').innerHTML = n_patients;
 	plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 

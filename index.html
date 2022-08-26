@@ -1,21 +1,36 @@
 <html>
 	<meta charset="utf-8">
-	<div id="my_dataviz"></div>
-	R meanlog (<output id=R_mu_value>5</output>):
-	<input type="range" name="R_mu" id=R_mu min="1" max="20" value="5">
-	<br></br>
-	R sdlog (<output id=R_sigma_value>3</output>):
-	<input type="range" name="R_sigma" id=R_sigma min="1" max="20" value="3">
-	<br></br>
-	Immunotherapy effect (raise kiling value) (<output id=imm_effect_value>1</output>):
-	<input type="range" name="raise_killing" id=raise_killing min="1" max="20" value="1">
-	<br></br>
-	Chemotherapy Effect (<output id=chemo_effect_value>1</output>):
-	<input type="range" name="chemo_effect" id=chemo_effect min="0" max="10" value="10">
-	<br></br>
-	No. of patients (<output id=n_patients_value>100</output>):
-	<input type="range" name="n_patients" id=n_patients min="20" max="1000" value="100">
-	<br></br>
+	<head>
+		<link rel="stylesheet" type="text/css" href="slider.css">
+	</head>
+	<div id="my_dataviz", class="center"></div>
+
+	<br>
+
+	<table class="center">
+		<tr>
+			<th class="table_head"> R meanlog </th>
+			<th class="table_head"> R sdlog </th>
+			<th class="table_head"> Immunotherapy effect </th>
+			<th class="table_head"> Chemotherapy Effect </th>
+			<th class="table_head"> No. of patients </th>
+		</tr>
+		<tr>
+			<td> <output id=R_mu_value> 5 </output> </td>
+			<td> <output id=R_sigma_value> 3 </output> </td>
+			<td> <output id=imm_effect_value> 1 </output> </td>
+			<td> <output id=chemo_effect_value> 1 </output> </td>
+			<td> <output id=n_patients_value> 100 </output> </td>
+		</tr>
+		<tr>
+			<td> <input type="range" class="center" name="R_mu" id=R_mu min="1" max="20" value="5" oninput="document.getElementById('R_mu_value').innerHTML=this.value"> </td>
+			<td> <input type="range" class="center" name="R_sigma" id=R_sigma min="1" max="20" value="3" oninput="document.getElementById('R_sigm_value').innerHTML=this.value"> </td>
+			<td> <input type="range" class="center" name="raise_killing" id=raise_killing min="1" max="20" value="1" oninput="document.getElementById('imm_effect_value').innerHTML=this.value"> </td>
+			<td> <input type="range" class="center" name="chemo_effect" id=chemo_effect min="0" max="10" value="10" oninput="document.getElementById('chemo_effect_value').innerHTML=this.value"> </td>
+			<td> <input type="range" class="center" name="n_patients" id=n_patients min="20" max="1000" value="100" oninput="document.getElementById('n_patients_value').innerHTML=this.value"> </td>
+		</tr>
+	</table>
+
 	<button type='button', name='download_raw', id='download_raw', onclick="downloadBlob(survival_to_csv(death_times_treat, death_times_placebo), 'export_raw.csv', 'text/csv;charset=utf-8;')"> Download Raw Data </button>
 	<button type='button', name='download_prop', id='download_prop', onclick="downloadBlob(km_to_csv(d1, d2), 'export_km.csv', 'text/csv;charset=utf-8;')"> Download KM Data </button>
 	<script src="https://d3js.org/d3.v7.min.js"></script>
