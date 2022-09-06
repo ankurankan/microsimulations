@@ -3,8 +3,8 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="slider.css">
 	</head>
+	<h3 class="center"> <em> In silico </em> cancer trial simulation</h3>
 	<div id="my_dataviz", class="center"></div>
-
 	<br>
 
 	<table class="center">
@@ -16,11 +16,11 @@
 			<th class="table_head"> No. of patients </th>
 		</tr>
 		<tr>
-			<td> <input type="text" id="R_mu_value" size=1 value=5 oninput="document.getElementById('R_mu').value=this.value"> </td>
-			<td> <input type="text" id="R_sigma_value" size=1 value=3 oninput="document.getElementById('R_sigma').value=this.value"> </td>
-			<td> <input type="text" id="imm_effect_value" size=1 value=1 oninput="document.getElementById('raise_killing').value=this.value"> </td>
-			<td> <input type="text" id="chemo_effect_value" size=1 value=1 oninput="document.getElementById('chemo_effect').value=this.value*10"> </td>
-			<td> <input type="text" id="n_patients_value" size=1 value=100 oninput="document.getElementById('n_patients').value=this.value"> </td>
+			<td> <input type="number" id="R_mu_value" value=5 oninput="document.getElementById('R_mu').value=this.value"> </td>
+			<td> <input type="number" id="R_sigma_value"  value=3 oninput="document.getElementById('R_sigma').value=this.value"> </td>
+			<td> <input type="number" id="imm_effect_value" value=1 oninput="document.getElementById('raise_killing').value=this.value"> </td>
+			<td> <input type="number" id="chemo_effect_value" value=1 oninput="document.getElementById('chemo_effect').value=this.value*10"> </td>
+			<td> <input type="number" id="n_patients_value" value=100 oninput="document.getElementById('n_patients').value=this.value"> </td>
 		</tr>
 		<tr>
 			<td> <input type="range" class="center" name="R_mu" id=R_mu min="1" max="20" value="5" oninput="document.getElementById('R_mu_value').value=this.value"> </td>

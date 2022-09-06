@@ -2,9 +2,9 @@
 
 const MAX_X_VALUE = 25; // Max time in months to plot
 
-var margin = {top: 30, right: 30, bottom: 50, left: 50},
-    width = 460 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+var margin = {top: 50, right: 50, bottom: 70, left: 60},
+    width = 820 - margin.left - margin.right,
+    height = 520 - margin.top - margin.bottom;
 
 
 var R_mu = document.getElementById('R_mu').value
@@ -25,63 +25,70 @@ var svg = d3.select("#my_dataviz")
   const x_ax = d3.scaleLinear()
             .domain([0, MAX_X_VALUE])
             .range([0, width]);
+
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x_ax));
+      .attr("class", "axis")
+      .call(d3.axisBottom(x_ax).tickValues([0, 3, 6, 9, 12, 15, 18, 21, 24]));
 
   svg.append("text")
 	.attr("transform",
-	      "translate(" + (width/2) + " ," + (height + margin.top + 10) + ")")
+	      "translate(" + (width/2) + " ," + (height + margin.top) + ")")
 	.style("text-anchor", "middle")
-	.text("Time (Months)");
+	.attr("class", "axislabels")
+	.text("Time (Months)")
+	.attr("font-weight", 600);
 
   // add the y Axis
   const y_ax = d3.scaleLinear()
             .range([height, 0])
             .domain([0, 1.0]);
   svg.append("g")
+      .attr("class", "axis")
       .call(d3.axisLeft(y_ax));
   
   svg.append("text")
 	.attr("transform", "rotate(-90)")
+	.attr("class", "axislabels")
 	.attr("y", 0 - margin.left)
 	.attr("x", 0 - (height/2))
 	.attr("dy", "1em")
 	.style("text-anchor", "middle")
-	.text("Proportion Alive");
+	.text("Proportion Alive")
+	.attr("font-weight", 600);
 
 // Add legend
 svg.append('g')
    .append('path')
-	.datum([[19, 0.9], [20, 0.9]])
+	.datum([[20, 0.9], [21, 0.9]])
 	.attr("fill", "none")
-	.attr("stroke", "blue")
+	.attr("stroke", "black")
 	.attr("stroke-width", 2)
-	.style("opacity", 0.5)
+	.style("opacity", 0.7)
 	.attr("d", d3.line()
 		.x(function(d) { return x_ax(d[0]); })
 		.y(function(d) { return y_ax(d[1]); })
 	);
 svg.append('text')
-        .attr("x", 310)
-	.attr("y", 37)
+        .attr("x", 610)
+	.attr("y", 45)
 	.text("Placebo");
 
 svg.append('g')
    .append('path')
-	.datum([[19, 0.8], [20, 0.8]])
+	.datum([[20, 0.82], [21, 0.82]])
 	.attr("fill", "none")
 	.attr("stroke", "red")
 	.attr("stroke-width", 2)
-	.style("opacity", 0.5)
+	.style("opacity", 0.7)
 	.attr("d", d3.line()
 		.x(function(d) { return x_ax(d[0]); })
 		.y(function(d) { return y_ax(d[1]); })
 	);
 
 svg.append('text')
-        .attr("x", 310)
-	.attr("y", 68)
+        .attr("x", 610)
+	.attr("y", 75)
 	.text("Treatment");
 
 function plot(data_placebo, data_treat, data_progress) {
@@ -94,9 +101,9 @@ function plot(data_placebo, data_treat, data_progress) {
   	    .attr("class", "mypath")
   	    .datum(data_placebo)
   	    .attr("fill", "none")
-  	    .attr("stroke", "blue")
+  	    .attr("stroke", "black")
   	    .attr("stroke-width", 2)
-	    .style("opacity", 0.5)
+	    .style("opacity", 0.7)
 	    .transition()
   	    .attr("d",  d3.line()
   	        .x(function(d) { return x_ax(d[0]); })
@@ -113,7 +120,7 @@ function plot(data_placebo, data_treat, data_progress) {
   	    .attr("fill", "none")
   	    .attr("stroke", "red")
   	    .attr("stroke-width", 2)
-	    .style("opacity", 0.5)
+	    .style("opacity", 0.7)
 	    .transition()
   	    .attr("d",  d3.line()
   	        .x(function(d) { return x_ax(d[0]); })
@@ -127,8 +134,8 @@ function plot(data_placebo, data_treat, data_progress) {
 	.attr('class', 'mypath_prog')
 	.datum(data_progress)
 	.attr("fill", "none")
-	.attr("stroke", "#21CDFD")
-	.attr("stroke-width", 1)
+	.attr("stroke", "grey")
+	.attr("stroke-width", 8)
 	.style("opacity", 0.6)
 	.transition()
 	.attr("d", d3.line()
@@ -138,9 +145,10 @@ function plot(data_placebo, data_treat, data_progress) {
 
   svg.append('text')
 	.attr('class', 'mypath_prog')
-	.attr('x', 150)
-	.attr('y', -10)
-	.text('Simulating')
+	.attr("transform",
+	      "translate(" + (width/2) + " ," + -25 + ")")
+	.style("text-anchor", "middle")
+	.text(Math.round((data_progress[1][0] / MAX_X_VALUE)*100) + "%")
 };
 
 d3.select("#R_mu").on("change", function(d){
@@ -173,6 +181,11 @@ d3.select("#raise_killing").on("change", function(d){
 })
 d3.select("#imm_effect_value").on("change", function(d){
 	raise_killing = this.value;
+	if (raise_killing < 1){
+		raise_killing = 1;
+		document.getElementById('raise_killing').value = 1;
+		document.getElementById('imm_effect_value').value = 1;
+	}
 	cancel_sim(timeout_ids);
 	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
@@ -185,6 +198,12 @@ d3.select("#chemo_effect").on("change", function(d){
 })
 d3.select("#chemo_effect_value").on("change", function(d){
 	chemo_effect = this.value;
+	if (chemo_effect > 1){
+		chemo_effect = 1;
+		document.getElementById('chemo_effect').max = 1;
+		document.getElementById('chemo_effect').value = 1;
+		document.getElementById('chemo_effect_value').value = 1;
+	}
 	cancel_sim(timeout_ids);
 	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
@@ -236,7 +255,7 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 		}
 		d2.push([MAX_X_VALUE, array_sum(death_times_placebo.map(i => i > MAX_X_VALUE? 1: 0))/death_times_placebo.length]);
 
-		plot(d2, d1, [[0, 1.01], [((n_patients-n)/n_patients)*MAX_X_VALUE, 1.01]]);
+		plot(d2, d1, [[0, 1.05], [((n_patients-n)/n_patients)*MAX_X_VALUE, 1.05]]);
 		if( --n > 0 ){
 			fun_calls.push(setTimeout( get_next_patient, 0 ));
 		} else {
