@@ -83,6 +83,15 @@ function vectorCompare(x, y){
 }
 
 /**
+ * Compare each value of x to y. Returns true for each i if x[i] <= y
+ * @param {Array} x
+ * @param y
+ */
+function vectorCompareEqual(x, y){
+	return x.map((e, i) => e >= y);
+}
+
+/**
  * Computes the Euclidean distance between points x and y
  * @param {Array} x
  * @param {Array} y

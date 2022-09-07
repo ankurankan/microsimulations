@@ -3,7 +3,7 @@
 const MAX_X_VALUE = 25; // Max time in months to plot
 const NO_AT_RISK_TIMEPOINTS = [0, 3, 6, 9, 12, 15, 18, 21, 24]; // Time-points for which to calculate no at risk
 
-var margin = {top: 50, right: 50, bottom: 70, left: 60},
+var margin = {top: 50, right: 50, bottom: 120, left: 100},
     width = 820 - margin.left - margin.right,
     height = 520 - margin.top - margin.bottom;
 
@@ -34,7 +34,7 @@ var svg = d3.select("#my_dataviz")
 
   svg.append("text")
 	.attr("transform",
-	      "translate(" + (width/2) + " ," + (height + margin.top) + ")")
+	      "translate(" + (width/2) + " ," + (height + margin.top - 10) + ")")
 	.style("text-anchor", "middle")
 	.attr("class", "axislabels")
 	.text("Time (Months)")
@@ -51,7 +51,7 @@ var svg = d3.select("#my_dataviz")
   svg.append("text")
 	.attr("transform", "rotate(-90)")
 	.attr("class", "axislabels")
-	.attr("y", 0 - margin.left)
+	.attr("y", 0 - margin.left + 40)
 	.attr("x", 0 - (height/2))
 	.attr("dy", "1em")
 	.style("text-anchor", "middle")
@@ -61,7 +61,7 @@ var svg = d3.select("#my_dataviz")
 // Add legend
 svg.append('g')
    .append('path')
-	.datum([[20, 0.9], [21, 0.9]])
+	.datum([[21.5, 0.89], [22.5, 0.89]])
 	.attr("fill", "none")
 	.attr("stroke", "black")
 	.attr("stroke-width", 2)
@@ -77,7 +77,7 @@ svg.append('text')
 
 svg.append('g')
    .append('path')
-	.datum([[20, 0.82], [21, 0.82]])
+	.datum([[21.5, 0.80], [22.5, 0.80]])
 	.attr("fill", "none")
 	.attr("stroke", "red")
 	.attr("stroke-width", 2)
@@ -91,6 +91,21 @@ svg.append('text')
         .attr("x", 610)
 	.attr("y", 75)
 	.text("Treatment");
+
+// Text for no at risk
+svg.append('text')
+	.attr("x", x_ax(0) - 100)
+	.attr("y", height + margin.top + 20)
+	.attr("class", "noatrisk")
+	.text("No. at risk:")
+svg.append('text')
+	.attr("x", x_ax(0) - 100)
+	.attr("y", height + margin.top + 40)
+	.text("Treatment");
+svg.append('text')
+	.attr("x", x_ax(0) - 100)
+	.attr("y", height + margin.top + 60)
+	.text("Placebo");
 
 function plot(data_placebo, data_treat, no_at_risk, data_progress) {
   svg.selectAll('.mypath, .mypath_prog').remove();
@@ -156,7 +171,15 @@ function plot(data_placebo, data_treat, no_at_risk, data_progress) {
 	  svg.append('text')
 	  	.attr('class', 'no_at_risk_text')
 	  	.attr("transform",
-			"translate(" + no_at_risk_positions[i] + " ," + (height + margin.top) + " )")
+			"translate(" + no_at_risk_positions[i] + " ," + (height + margin.top + 40) + " )")
+	  	.style("text-anchor", "middle")
+	  	.text(no_at_risk['treatment'][i])
+  }
+  for (i=0; i<no_at_risk_positions.length; i++){
+	  svg.append('text')
+	  	.attr('class', 'no_at_risk_text')
+	  	.attr("transform",
+			"translate(" + no_at_risk_positions[i] + " ," + (height + margin.top + 60) + " )")
 	  	.style("text-anchor", "middle")
 	  	.text(no_at_risk['placebo'][i])
   }
@@ -211,8 +234,8 @@ d3.select("#chemo_effect_value").on("change", function(d){
 	chemo_effect = this.value;
 	if (chemo_effect > 1){
 		chemo_effect = 1;
-		document.getElementById('chemo_effect').max = 1;
-		document.getElementById('chemo_effect').value = 1;
+		document.getElementById('chemo_effect').max = 10;
+		document.getElementById('chemo_effect').value = 10;
 		document.getElementById('chemo_effect_value').value = 1;
 	}
 	cancel_sim(timeout_ids);
@@ -242,6 +265,7 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 	let fun_calls = [];
 	
 	function get_next_patient(){
+		svg.selectAll('.no_at_risk_text').remove();
 		let no_at_risk = {"placebo":[], "treatment": []};
 
 		// Get the survival values
@@ -254,11 +278,11 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 	
 		// Compute the no at risk values for placebo and treatment arm
 		for (let i=0; i<NO_AT_RISK_TIMEPOINTS.length; i++){
-			no_at_risk['treatment'].push(array_sum(vectorCompare(death_times_treat, NO_AT_RISK_TIMEPOINTS[i])));
+			no_at_risk['treatment'].push(array_sum(vectorCompareEqual(death_times_treat, NO_AT_RISK_TIMEPOINTS[i])));
 		}
 
 		for (let i=0; i<NO_AT_RISK_TIMEPOINTS.length; i++){
-			no_at_risk['placebo'].push(array_sum(vectorCompare(death_times_placebo, NO_AT_RISK_TIMEPOINTS[i])));
+			no_at_risk['placebo'].push(array_sum(vectorCompareEqual(death_times_placebo, NO_AT_RISK_TIMEPOINTS[i])));
 		}
 
 		// Compute survival proportions
@@ -286,7 +310,6 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 			fun_calls.push(setTimeout( get_next_patient, 0 ));
 		} else {
 			svg.selectAll('.mypath_prog').remove();
-			svg.selectAll('.no_at_risk_text').remove();
 		}
 	}
 	get_next_patient();
