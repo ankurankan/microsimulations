@@ -1,6 +1,7 @@
 // set the dimensions and margins of the graph
 
 const MAX_X_VALUE = 25; // Max time in months to plot
+const NO_AT_RISK_TIMEPOINTS = [0, 3, 6, 9, 12, 15, 18, 21, 24]; // Time-points for which to calculate no at risk
 
 var margin = {top: 50, right: 50, bottom: 70, left: 60},
     width = 820 - margin.left - margin.right,
@@ -91,7 +92,7 @@ svg.append('text')
 	.attr("y", 75)
 	.text("Treatment");
 
-function plot(data_placebo, data_treat, data_progress) {
+function plot(data_placebo, data_treat, no_at_risk, data_progress) {
   svg.selectAll('.mypath, .mypath_prog').remove();
   // Plot the area
   if (data_placebo != null){
@@ -149,6 +150,16 @@ function plot(data_placebo, data_treat, data_progress) {
 	      "translate(" + (width/2) + " ," + -25 + ")")
 	.style("text-anchor", "middle")
 	.text(Math.round((data_progress[1][0] / MAX_X_VALUE)*100) + "%")
+
+  no_at_risk_positions = NO_AT_RISK_TIMEPOINTS.map((e, i) => x_ax(e));
+  for (i=0; i<no_at_risk_positions.length; i++){
+	  svg.append('text')
+	  	.attr('class', 'no_at_risk_text')
+	  	.attr("transform",
+			"translate(" + no_at_risk_positions[i] + " ," + (height + margin.top) + " )")
+	  	.style("text-anchor", "middle")
+	  	.text(no_at_risk['placebo'][i])
+  }
 };
 
 d3.select("#R_mu").on("change", function(d){
@@ -231,12 +242,26 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 	let fun_calls = [];
 	
 	function get_next_patient(){
+		let no_at_risk = {"placebo":[], "treatment": []};
+
+		// Get the survival values
 		let d_treat = population_survival( R_mu, R_sigma, raise_killing, chemo_effect, 1 );
 		death_times_treat.push( parseFloat(d_treat[0]) );
+	
 
 		let d_placebo = population_survival(R_mu, R_sigma, 1, 1, 1);
 		death_times_placebo.push( parseFloat(d_placebo[0]) );
+	
+		// Compute the no at risk values for placebo and treatment arm
+		for (let i=0; i<NO_AT_RISK_TIMEPOINTS.length; i++){
+			no_at_risk['treatment'].push(array_sum(vectorCompare(death_times_treat, NO_AT_RISK_TIMEPOINTS[i])));
+		}
 
+		for (let i=0; i<NO_AT_RISK_TIMEPOINTS.length; i++){
+			no_at_risk['placebo'].push(array_sum(vectorCompare(death_times_placebo, NO_AT_RISK_TIMEPOINTS[i])));
+		}
+
+		// Compute survival proportions
 		death_times_treat = death_times_treat.sort((a,b) => a - b);
 		d1 = [[0,1]];
 		for( let i = 0 ; i < death_times_treat.length ; i ++ ){
@@ -255,11 +280,13 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 		}
 		d2.push([MAX_X_VALUE, array_sum(death_times_placebo.map(i => i > MAX_X_VALUE? 1: 0))/death_times_placebo.length]);
 
-		plot(d2, d1, [[0, 1.05], [((n_patients-n)/n_patients)*MAX_X_VALUE, 1.05]]);
+		data_progress = [[0, 1.05], [((n_patients-n)/n_patients)*MAX_X_VALUE, 1.05]]
+		plot(d2, d1, no_at_risk, data_progress);
 		if( --n > 0 ){
 			fun_calls.push(setTimeout( get_next_patient, 0 ));
 		} else {
 			svg.selectAll('.mypath_prog').remove();
+			svg.selectAll('.no_at_risk_text').remove();
 		}
 	}
 	get_next_patient();
