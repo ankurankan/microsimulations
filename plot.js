@@ -107,7 +107,7 @@ svg.append('text')
 	.attr("y", height + margin.top + 60)
 	.text("Placebo");
 
-function plot(data_placebo, data_treat, no_at_risk, data_progress) {
+function plot(data_placebo, data_treat, no_at_risk, median_survival, data_progress) {
   svg.selectAll('.mypath, .mypath_prog').remove();
   // Plot the area
   if (data_placebo != null){
@@ -165,6 +165,63 @@ function plot(data_placebo, data_treat, no_at_risk, data_progress) {
 	      "translate(" + (width/2) + " ," + -25 + ")")
 	.style("text-anchor", "middle")
 	.text(Math.round((data_progress[1][0] / MAX_X_VALUE)*100) + "%")
+
+  var median_treatment = svg
+	.append('g')
+	.append('path')
+	.attr('class', 'mypath_dashed')
+	.datum([[0, 0.5], [median_survival['treatment'], 0.5]])
+	.attr("fill", "none")
+	.attr("stroke", "red")
+	.attr("stroke-width", 1)
+	.style("opacity", 0.6)
+	.transition()
+	.attr("d", d3.line()
+		.x(function(d) { return x_ax(d[0]); })
+		.y(function(d) { return y_ax(d[1]); })
+	);
+  svg.append('g')
+	.append('path')
+	.attr('class', 'mypath_dashed')
+	.datum([[median_survival['treatment'], 0.5], [median_survival['treatment'], 0]])
+	.attr("fill", "none")
+	.attr("stroke", "red")
+	.attr("stroke-width", 1)
+	.style("opacity", 0.6)
+	.transition()
+	.attr("d", d3.line()
+		.x(function(d) { return x_ax(d[0]); })
+		.y(function(d) { return y_ax(d[1]); })
+	);
+  
+  var median_placebo = svg
+	.append('g')
+	.append('path')
+	.attr('class', 'mypath_dashed')
+	.datum([[0, 0.5], [median_survival['placebo'], 0.5]])
+	.attr("fill", "none")
+	.attr("stroke", "black")
+	.attr("stroke-width", 1)
+	.style("opacity", 0.6)
+	.transition()
+	.attr("d", d3.line()
+		.x(function(d) { return x_ax(d[0]); })
+		.y(function(d) { return y_ax(d[1]); })
+	);
+  svg.append('g')
+	.append('path')
+	.attr('class', 'mypath_dashed')
+	.datum([[median_survival['placebo'], 0.5], [median_survival['placebo'], 0]])
+	.attr("fill", "none")
+	.attr("stroke", "black")
+	.attr("stroke-width", 1)
+	.style("opacity", 0.6)
+	.transition()
+	.attr("d", d3.line()
+		.x(function(d) { return x_ax(d[0]); })
+		.y(function(d) { return y_ax(d[1]); })
+	);
+	
 
   no_at_risk_positions = NO_AT_RISK_TIMEPOINTS.map((e, i) => x_ax(e));
   for (i=0; i<no_at_risk_positions.length; i++){
@@ -266,6 +323,7 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 	
 	function get_next_patient(){
 		svg.selectAll('.no_at_risk_text').remove();
+		svg.selectAll('.mypath_dashed').remove();
 		let no_at_risk = {"placebo":[], "treatment": []};
 
 		// Get the survival values
@@ -284,6 +342,9 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 		for (let i=0; i<NO_AT_RISK_TIMEPOINTS.length; i++){
 			no_at_risk['placebo'].push(array_sum(vectorCompareEqual(death_times_placebo, NO_AT_RISK_TIMEPOINTS[i])));
 		}
+
+		// Compute median survivals
+		median_survival = {'placebo': median(death_times_placebo), 'treatment': median(death_times_treat)};
 
 		// Compute survival proportions
 		death_times_treat = death_times_treat.sort((a,b) => a - b);
@@ -305,7 +366,7 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 		d2.push([MAX_X_VALUE, array_sum(death_times_placebo.map(i => i > MAX_X_VALUE? 1: 0))/death_times_placebo.length]);
 
 		data_progress = [[0, 1.05], [((n_patients-n)/n_patients)*MAX_X_VALUE, 1.05]]
-		plot(d2, d1, no_at_risk, data_progress);
+		plot(d2, d1, no_at_risk, median_survival, data_progress);
 		if( --n > 0 ){
 			fun_calls.push(setTimeout( get_next_patient, 0 ));
 		} else {

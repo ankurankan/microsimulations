@@ -102,6 +102,22 @@ function distance(x, y){
 }
 
 /**
+ * Compute the median of the array `numbers`
+ */
+function median(numbers) {
+    const sorted = Array.from(numbers).sort((a, b) => a - b);
+    const middle = Math.floor(sorted.length / 2);
+
+    if (sorted.length % 2 === 0) {
+        return (sorted[middle - 1] + sorted[middle]) / 2;
+    }
+
+    return sorted[middle];
+}
+
+console.log(median([4, 5, 7, 1, 33]));
+
+/**
  * Appoximate the value of y in the differential equation dy/dt at t=(start+stepSize*steps) given value at t0 using Runge-Kutta method.
  * @param {function} f: Differential equation which returns the value of dy/dt
  * @param {Array} y0: The value of the function at t0. 
