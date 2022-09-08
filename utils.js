@@ -164,7 +164,7 @@ function get_simulation_fn(model_id){
 		return population_survival_model1;
 	}
 	else if (model_id == "model2"){
-		return population_survival_model1;
+		return population_survival_model2;
 	}
 	else if (model_id == "model3"){
 		return population_survival_model1;
