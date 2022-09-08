@@ -158,3 +158,15 @@ function rk4_boost(f, y0, t0, step_size, n_steps){
 	}
 	return (y_history);
 }
+
+function get_simulation_fn(model_id){
+	if (model_id == "model1"){
+		return population_survival_model1;
+	}
+	else if (model_id == "model2"){
+		return population_survival_model1;
+	}
+	else if (model_id == "model3"){
+		return population_survival_model1;
+	}
+}

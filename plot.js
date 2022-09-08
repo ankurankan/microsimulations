@@ -13,6 +13,7 @@ var R_sigma = document.getElementById('R_sigma').value
 var raise_killing = document.getElementById('raise_killing').value
 var chemo_effect = document.getElementById('chemo_effect').value / 10
 var n_patients = document.getElementById('n_patients').value
+var simulation_fn = get_simulation_fn(document.getElementById("model").value)
 
 var svg = d3.select("#my_dataviz")
   	    .append("svg")
@@ -249,30 +250,30 @@ function plot(data_placebo, data_treat, no_at_risk, median_survival, data_progre
 d3.select("#R_mu").on("change", function(d){
 	R_mu = this.value;
 	cancel_sim(timeout_ids);
-	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 d3.select("#R_mu_value").on("change", function(d){
 	R_mu = this.value;
 	cancel_sim(timeout_ids);
-	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 
 d3.select("#R_sigma").on("change", function(d){
 	R_sigma = this.value;
 	cancel_sim(timeout_ids);
-	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 d3.select("#R_sigma_value").on("change", function(d){
 	R_sigma = this.value;
 	cancel_sim(timeout_ids);
-	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 
 
 d3.select("#raise_killing").on("change", function(d){
 	raise_killing = this.value;
 	cancel_sim(timeout_ids);
-	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 d3.select("#imm_effect_value").on("change", function(d){
 	raise_killing = this.value;
@@ -282,14 +283,14 @@ d3.select("#imm_effect_value").on("change", function(d){
 		document.getElementById('imm_effect_value').value = 1;
 	}
 	cancel_sim(timeout_ids);
-	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 
 
 d3.select("#chemo_effect").on("change", function(d){
 	chemo_effect = this.value/10;
 	cancel_sim(timeout_ids);
-	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 d3.select("#chemo_effect_value").on("change", function(d){
 	chemo_effect = this.value;
@@ -300,18 +301,24 @@ d3.select("#chemo_effect_value").on("change", function(d){
 		document.getElementById('chemo_effect_value').value = 1;
 	}
 	cancel_sim(timeout_ids);
-	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 
 d3.select("#n_patients").on("change", function(d){
 	n_patients = this.value;
 	cancel_sim(timeout_ids);
-	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 d3.select("#n_patients_value").on("change", function(d){
 	n_patients = this.value;
 	cancel_sim(timeout_ids);
-	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
+})
+
+d3.select("#model").on("change", function(d){
+	simulation_fn = get_simulation_fn(this.value);
+	cancel_sim(timeout_ids);
+	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 
 function cancel_sim(timeout_ids){
@@ -320,7 +327,7 @@ function cancel_sim(timeout_ids){
 	}
 }
 
-function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
+function plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n){
 	let death_times_treat = [];
 	let death_times_placebo = [];
 	let fun_calls = [];
@@ -331,11 +338,11 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 		let no_at_risk = {"placebo":[], "treatment": []};
 
 		// Get the survival values
-		let d_treat = population_survival( R_mu, R_sigma, raise_killing, chemo_effect, 1 );
+		let d_treat = simulation_fn( R_mu, R_sigma, raise_killing, chemo_effect, 1 );
 		death_times_treat.push( parseFloat(d_treat[0]) );
 	
 
-		let d_placebo = population_survival(R_mu, R_sigma, 1, 1, 1);
+		let d_placebo = simulation_fn(R_mu, R_sigma, 1, 1, 1);
 		death_times_placebo.push( parseFloat(d_placebo[0]) );
 	
 		// Compute the no at risk values for placebo and treatment arm
@@ -386,4 +393,4 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 	return [death_times_treat, death_times_placebo, fun_calls];
 }
 
-[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n_patients)
+[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients)
