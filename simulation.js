@@ -115,7 +115,13 @@ function median(numbers) {
     return sorted[middle];
 }
 
-console.log(median([4, 5, 7, 1, 33]));
+/**
+ * Compute the mean of the array `numbers` while replacing Infinite values with `max`.
+ */
+function mean(numbers, max) {
+    return Math.round((array_sum(numbers.map((e, i) => (e == Infinity) ? max : e)) / numbers.length) * 100) / 100;
+}
+
 
 /**
  * Appoximate the value of y in the differential equation dy/dt at t=(start+stepSize*steps) given value at t0 using Runge-Kutta method.

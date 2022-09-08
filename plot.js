@@ -108,64 +108,10 @@ svg.append('text')
 	.text("Placebo");
 
 function plot(data_placebo, data_treat, no_at_risk, median_survival, data_progress) {
+  // Delete the previous lines
   svg.selectAll('.mypath, .mypath_prog').remove();
-  // Plot the area
-  if (data_placebo != null){
-  	var placebo = svg
-  	  .append('g')
-  	  .append("path")
-  	    .attr("class", "mypath")
-  	    .datum(data_placebo)
-  	    .attr("fill", "none")
-  	    .attr("stroke", "black")
-  	    .attr("stroke-width", 2)
-	    .style("opacity", 0.7)
-	    .transition()
-  	    .attr("d",  d3.line()
-  	        .x(function(d) { return x_ax(d[0]); })
-  	        .y(function(d) { return y_ax(d[1]); })
-  	    );
-  }
 
-  if (data_treat != null){
-  	var treat = svg
-  	  .append('g')
-  	  .append("path")
-  	    .attr("class", "mypath")
-  	    .datum(data_treat)
-  	    .attr("fill", "none")
-  	    .attr("stroke", "red")
-  	    .attr("stroke-width", 2)
-	    .style("opacity", 0.7)
-	    .transition()
-  	    .attr("d",  d3.line()
-  	        .x(function(d) { return x_ax(d[0]); })
-  	        .y(function(d) { return y_ax(d[1]); })
-  	    );
-  }
-
-  var progress = svg
-	.append('g')
-	.append('path')
-	.attr('class', 'mypath_prog')
-	.datum(data_progress)
-	.attr("fill", "none")
-	.attr("stroke", "grey")
-	.attr("stroke-width", 8)
-	.style("opacity", 0.6)
-	.transition()
-	.attr("d", d3.line()
-		.x(function(d) { return x_ax(d[0]); })
-		.y(function(d) { return y_ax(d[1]); })
-	);
-
-  svg.append('text')
-	.attr('class', 'mypath_prog')
-	.attr("transform",
-	      "translate(" + (width/2) + " ," + -25 + ")")
-	.style("text-anchor", "middle")
-	.text(Math.round((data_progress[1][0] / MAX_X_VALUE)*100) + "%")
-
+  // Plot the median lines
   var median_treatment = svg
 	.append('g')
 	.append('path')
@@ -221,8 +167,66 @@ function plot(data_placebo, data_treat, no_at_risk, median_survival, data_progre
 		.x(function(d) { return x_ax(d[0]); })
 		.y(function(d) { return y_ax(d[1]); })
 	);
-	
 
+  // Plot the survival curve
+  if (data_placebo != null){
+  	var placebo = svg
+  	  .append('g')
+  	  .append("path")
+  	    .attr("class", "mypath")
+  	    .datum(data_placebo)
+  	    .attr("fill", "none")
+  	    .attr("stroke", "black")
+  	    .attr("stroke-width", 2)
+	    .style("opacity", 0.7)
+	    .transition()
+  	    .attr("d",  d3.line()
+  	        .x(function(d) { return x_ax(d[0]); })
+  	        .y(function(d) { return y_ax(d[1]); })
+  	    );
+  }
+
+  if (data_treat != null){
+  	var treat = svg
+  	  .append('g')
+  	  .append("path")
+  	    .attr("class", "mypath")
+  	    .datum(data_treat)
+  	    .attr("fill", "none")
+  	    .attr("stroke", "red")
+  	    .attr("stroke-width", 2)
+	    .style("opacity", 0.7)
+	    .transition()
+  	    .attr("d",  d3.line()
+  	        .x(function(d) { return x_ax(d[0]); })
+  	        .y(function(d) { return y_ax(d[1]); })
+  	    );
+  }
+
+  // Plot the progress bar
+  var progress = svg
+	.append('g')
+	.append('path')
+	.attr('class', 'mypath_prog')
+	.datum(data_progress)
+	.attr("fill", "none")
+	.attr("stroke", "grey")
+	.attr("stroke-width", 8)
+	.style("opacity", 0.6)
+	.transition()
+	.attr("d", d3.line()
+		.x(function(d) { return x_ax(d[0]); })
+		.y(function(d) { return y_ax(d[1]); })
+	);
+
+  svg.append('text')
+	.attr('class', 'mypath_prog')
+	.attr("transform",
+	      "translate(" + (width/2) + " ," + -25 + ")")
+	.style("text-anchor", "middle")
+	.text(Math.round((data_progress[1][0] / MAX_X_VALUE)*100) + "%")
+
+  // Plot the no at risk numbers
   no_at_risk_positions = NO_AT_RISK_TIMEPOINTS.map((e, i) => x_ax(e));
   for (i=0; i<no_at_risk_positions.length; i++){
 	  svg.append('text')
@@ -345,6 +349,10 @@ function plot_pop(R_mu, R_sigma, raise_killing, chemo_effect, n){
 
 		// Compute median survivals
 		median_survival = {'placebo': median(death_times_placebo), 'treatment': median(death_times_treat)};
+
+		// Compute mean survivals
+		document.getElementById('mean_survival_placebo').innerHTML = mean(death_times_placebo, 25);
+		document.getElementById('mean_survival_treatment').innerHTML = mean(death_times_treat, 25);
 
 		// Compute survival proportions
 		death_times_treat = death_times_treat.sort((a,b) => a - b);
