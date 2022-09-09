@@ -9,8 +9,8 @@
 	<br>
 	<table class="center">
 		<tr>
-			<th class="table_head"> Mean Survival Placebo </th>
-			<th class="table_head"> Mean Survival Treatment </th>
+			<th class="table_head_mean"> Mean Survival Placebo </th>
+			<th class="table_head_mean"> Mean Survival Treatment </th>
 		</tr>
 		<tr>
 			<td id="mean_survival_placebo"></td>
@@ -20,11 +20,11 @@
 	<br>
 	<br>
 
-	<table class="center">
+	<table class="center" id="input_table">
 		<tr>
 			<th class="table_head"> Model </th>
-			<th class="table_head"> R meanlog </th>
-			<th class="table_head"> R sdlog </th>
+			<th class="table_head"> Mean Growth Rate </th>
+			<th class="table_head"> Growth Rate Standard Deviation </th>
 			<th class="table_head"> Immunotherapy Effect </th>
 			<th class="table_head"> Chemotherapy Effect </th>
 			<th class="table_head"> No. of patients </th>
@@ -51,14 +51,16 @@
 			<td> <input type="range" class="center" name="chemo_effect" id=chemo_effect min="0" max="10" value="10" oninput="document.getElementById('chemo_effect_value').value=this.value/10"> </td>
 			<td> <input type="range" class="center" name="n_patients" id=n_patients min="20" max="1000" value="100" oninput="document.getElementById('n_patients_value').value=this.value"> </td>
 		</tr>
-		<tr style="height:50px"></tr>
+
+	</table>
+	<br>
+	<br>
+	<table class="center">
 		<tr>
-			<td></td>
-			<td>
+			<td class="table_download">
 				<button type='button' name='download_raw' id='download_raw' class='center' onclick="downloadBlob(survival_to_csv(death_times_treat, death_times_placebo), 'export_raw.csv', 'text/csv;charset=utf-8;')"> Download Raw Data </button>
 			</td>
-			<td></td>
-			<td>
+			<td class="table_download">
 				<button type='button' name='download_prop' id='download_prop' class='center' onclick="downloadBlob(km_to_csv(d1, d2), 'export_km.csv', 'text/csv;charset=utf-8;')"> Download KM Data </button>
 			</td>
 		</tr>

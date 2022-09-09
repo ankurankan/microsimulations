@@ -1,6 +1,17 @@
 .table_head{
+	padding-right: 5px;
+	padding-left: 5px;
+	width:160px;
+}
+
+.table_head_mean{
 	padding-right: 20px;
 	padding-left: 20px;
+}
+
+.table_download{
+	padding-right: 30px;
+	padding-left: 30px;
 }
 
 .center{
@@ -43,3 +54,4 @@ input{
 .mypath_dashed{
 	stroke-dasharray: 5,5;
 }
+
