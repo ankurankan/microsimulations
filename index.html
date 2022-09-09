@@ -66,13 +66,13 @@
 	<table class="center">
 		<tr>
 			<td class="table_download">
-				<button type='button' name='rerun_sim' id='rerun_sim' class='center' onclick='rerun_sim()'> Rerun simulation </button>
+				<button type='button' name='rerun_sim' id='rerun_sim' class='buttons' onclick='rerun_sim()'> Rerun simulation </button>
 			</td>
 			<td class="table_download">
-				<button type='button' name='download_raw' id='download_raw' class='center' onclick="downloadBlob(survival_to_csv(death_times_treat, death_times_placebo), 'export_raw.csv', 'text/csv;charset=utf-8;')"> Download Raw Data </button>
+				<button type='button' name='download_raw' id='download_raw' class='buttons' onclick="downloadBlob(survival_to_csv(death_times_treat, death_times_placebo), 'export_raw.csv', 'text/csv;charset=utf-8;')"> Download Raw Data </button>
 			</td>
 			<td class="table_download">
-				<button type='button' name='download_prop' id='download_prop' class='center' onclick="downloadBlob(km_to_csv(d1, d2), 'export_km.csv', 'text/csv;charset=utf-8;')"> Download KM Data </button>
+				<button type='button' name='download_prop' id='download_prop' class='buttons' onclick="downloadBlob(km_to_csv(d1, d2), 'export_km.csv', 'text/csv;charset=utf-8;')"> Download KM Data </button>
 			</td>
 		</tr>
 	</table>
