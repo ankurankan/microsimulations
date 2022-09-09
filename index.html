@@ -51,13 +51,13 @@
 			<td> <input type="range" class="center" name="chemo_effect" id=chemo_effect min="0" max="10" value="10" oninput="document.getElementById('chemo_effect_value').value=this.value/10"> </td>
 			<td> <input type="range" class="center" name="n_patients" id=n_patients min="20" max="1000" value="100" oninput="document.getElementById('n_patients_value').value=this.value"> </td>
 		</tr>
-		<tr>
+		<tr class="description_row">
 			<td class="description_txt"> Short Description Placeholder </td>
-			<td class="description_txt"> Short Description Placeholder </td>
-			<td class="description_txt"> Short Description Placeholder </td>
-			<td class="description_txt"> Short Description Placeholder; Effect >= 1 </td>
-			<td class="description_txt"> Short Description Placeholder; Effect <= 1 </td>
-			<td class="description_txt"> Short Description Placeholder </td>
+			<td class="description_txt"> The mean of the log normal distribution from which the growth rate is sampled </td>
+			<td class="description_txt"> The standard deviation of the log normal distribution from which the growth rate is sampled </td>
+			<td class="description_txt"> Immunotherapy effect. Must be >= 1 </td>
+			<td class="description_txt"> Chemotherapy Effect. Must be <= 1 </td>
+			<td class="description_txt"> Number of patients in each arm of the simulation </td>
 		</tr>
 
 	</table>
