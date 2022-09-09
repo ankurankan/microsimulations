@@ -84,12 +84,14 @@ function tumormodel1(t, x){
 	return (dxdt)
 }
 
-function get_survival_model1(R, raise_killing, chemo_effect){
+function get_survival_model1(R, raise_killing, chemo_effect, diagnosis_threshold, death_threshold){
 	R_R_0 = R;
 	RAISE_KILLING = raise_killing;
 	LOWER_GROWTH = chemo_effect;
 	DIAGNOSED_AT = Infinity;
 	DEAD_AT = Infinity;
+	DIAGNOSIS_THRESHOLD = diagnosis_threshold;
+	DEATH_THRESHOLD = death_threshold;
 
 	x = [1.0, 0.0, 0.0, 1e6];
 	simulated_values = rk4(tumormodel1, x, 0, 1, t_max/1);
@@ -103,7 +105,7 @@ function get_survival_model1(R, raise_killing, chemo_effect){
 
 function population_survival_model1(R_mu, R_sigma, raise_killing, chemo_effect, n){
 	r_values = Array.from({length: n}, d3.randomLogNormal(R_mu, R_sigma));
-	survival_values = r_values.map((e, i) => get_survival_model1(e, raise_killing, chemo_effect));
+	survival_values = r_values.map((e, i) => get_survival_model1(e, raise_killing, chemo_effect, 65*1e8, 1e12));
 	return(survival_values);
 }
 
