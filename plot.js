@@ -1,8 +1,5 @@
 // set the dimensions and margins of the graph
 
-const MAX_X_VALUE = 25; // Max time in months to plot
-const NO_AT_RISK_TIMEPOINTS = [0, 3, 6, 9, 12, 15, 18, 21, 24]; // Time-points for which to calculate no at risk
-
 var margin = {top: 50, right: 5, bottom: 120, left: 100},
     width = 775 - margin.left - margin.right,
     height = 520 - margin.top - margin.bottom;
@@ -13,7 +10,8 @@ var R_sigma = document.getElementById('R_sigma').value
 var raise_killing = document.getElementById('raise_killing').value
 var chemo_effect = document.getElementById('chemo_effect').value / 10
 var n_patients = document.getElementById('n_patients').value
-var simulation_fn = get_simulation_fn(document.getElementById("model").value)
+var current_model = document.getElementById("model").value
+simulation_fn = get_simulation_fn(current_model)
 
 var svg = d3.select("#my_dataviz")
   	    .append("svg")
@@ -316,8 +314,10 @@ d3.select("#n_patients_value").on("change", function(d){
 })
 
 d3.select("#model").on("change", function(d){
-	simulation_fn = get_simulation_fn(this.value);
+	current_model = this.value
+	simulation_fn = get_simulation_fn(current_model);
 	cancel_sim(timeout_ids);
+
 	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
 
