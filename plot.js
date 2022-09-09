@@ -3,8 +3,8 @@
 const MAX_X_VALUE = 25; // Max time in months to plot
 const NO_AT_RISK_TIMEPOINTS = [0, 3, 6, 9, 12, 15, 18, 21, 24]; // Time-points for which to calculate no at risk
 
-var margin = {top: 50, right: 50, bottom: 120, left: 100},
-    width = 820 - margin.left - margin.right,
+var margin = {top: 50, right: 5, bottom: 120, left: 100},
+    width = 775 - margin.left - margin.right,
     height = 520 - margin.top - margin.bottom;
 
 
