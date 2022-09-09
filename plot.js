@@ -392,4 +392,8 @@ function plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n){
 	return [death_times_treat, death_times_placebo, fun_calls];
 }
 
+function rerun_sim(){
+	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients)
+}
+
 [death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients)
