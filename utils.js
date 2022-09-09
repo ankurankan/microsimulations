@@ -169,3 +169,40 @@ function get_simulation_fn(model_id){
 		return population_survival_model3;
 	}
 }
+
+function set_model_defaults(model_id){
+	/* Set R mean */
+	document.getElementById("R_mu").min = RMEAN_RANGE['min'][model_id]
+	document.getElementById("R_mu").max = RMEAN_RANGE['max'][model_id]
+	document.getElementById("R_mu").value = DEFAULT_VALUES[model_id]['rmean']
+	document.getElementById("R_mu_value").value = DEFAULT_VALUES[model_id]['rmean']
+	R_mu = DEFAULT_VALUES[model_id]['rmean']
+
+	/* Set R sd */
+	document.getElementById("R_sigma").min = RSD_RANGE['min'][model_id]
+	document.getElementById("R_sigma").max = RSD_RANGE['max'][model_id]
+	document.getElementById("R_sigma").value = DEFAULT_VALUES[model_id]['rsd']
+	document.getElementById("R_sigma_value").value = DEFAULT_VALUES[model_id]['rsd']
+	R_sigma = DEFAULT_VALUES[model_id]['rsd']
+
+	/* Set immunotherapy effect */
+	document.getElementById("raise_killing").min = IMM_EFFECT_RANGE['min'][model_id]
+	document.getElementById("raise_killing").max = IMM_EFFECT_RANGE['max'][model_id]
+	document.getElementById("raise_killing").value = DEFAULT_VALUES[model_id]['imm_effect']
+	document.getElementById("imm_effect_value").value = DEFAULT_VALUES[model_id]['imm_effect']
+	raise_killing = DEFAULT_VALUES[model_id]['imm_effect']
+
+	/* Set chemotherepy effect */
+	document.getElementById("chemo_effect").min = CHEMO_EFFECT_RANGE['min'][model_id]
+	document.getElementById("chemo_effect").max = CHEMO_EFFECT_RANGE['max'][model_id]
+	document.getElementById("chemo_effect").value = DEFAULT_VALUES[model_id]['chemo_effect']
+	document.getElementById("chemo_effect_value").value = DEFAULT_VALUES[model_id]['chemo_effect']
+	chemo_effect = DEFAULT_VALUES[model_id]['chemo_effect']
+
+	/* Set chemotherepy effect */
+	document.getElementById("n_patients").min = PATIENT_RANGE['min'][model_id]
+	document.getElementById("n_patients").max = PATIENT_RANGE['max'][model_id]
+	document.getElementById("n_patients").value = DEFAULT_VALUES[model_id]['n_patients']
+	document.getElementById("n_patients_value").value = DEFAULT_VALUES[model_id]['n_patients']
+	n_patients = DEFAULT_VALUES[model_id]['n_patients']
+}

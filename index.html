@@ -34,7 +34,7 @@
 			<td> <input type="number" id="R_mu_value" value=3 oninput="document.getElementById('R_mu').value=this.value"> </td>
 			<td> <input type="number" id="R_sigma_value"  value=1 oninput="document.getElementById('R_sigma').value=this.value"> </td>
 			<td> <input type="number" id="imm_effect_value" value=1 oninput="document.getElementById('raise_killing').value=this.value"> </td>
-			<td> <input type="number" id="chemo_effect_value" value=1 oninput="document.getElementById('chemo_effect').value=this.value*10"> </td>
+			<td> <input type="number" id="chemo_effect_value" value=1 oninput="document.getElementById('chemo_effect').value=this.value"> </td>
 			<td> <input type="number" id="n_patients_value" value=100 oninput="document.getElementById('n_patients').value=this.value"> </td>
 		</tr>
 		<tr>
@@ -48,7 +48,7 @@
 			<td> <input type="range" class="center" name="R_mu" id=R_mu min="-20" max="20" value="3" step="0.01" oninput="document.getElementById('R_mu_value').value=this.value"> </td>
 			<td> <input type="range" class="center" name="R_sigma" id=R_sigma min="0" max="20" value="1" step="0.01"  oninput="document.getElementById('R_sigma_value').value=this.value"> </td>
 			<td> <input type="range" class="center" name="raise_killing" id=raise_killing min="1" max="20" value="1" step="0.01" oninput="document.getElementById('imm_effect_value').value=this.value"> </td>
-			<td> <input type="range" class="center" name="chemo_effect" id=chemo_effect min="0" max="10" value="10" step="0.01" oninput="document.getElementById('chemo_effect_value').value=this.value/10"> </td>
+			<td> <input type="range" class="center" name="chemo_effect" id=chemo_effect min="0" max="1" value="1" step="0.01" oninput="document.getElementById('chemo_effect_value').value=this.value"> </td>
 			<td> <input type="range" class="center" name="n_patients" id=n_patients min="20" max="1000" value="100" step="1" oninput="document.getElementById('n_patients_value').value=this.value"> </td>
 		</tr>
 		<tr class="description_row">

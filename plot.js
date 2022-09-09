@@ -5,12 +5,13 @@ var margin = {top: 50, right: 5, bottom: 120, left: 100},
     height = 520 - margin.top - margin.bottom;
 
 
-var R_mu = document.getElementById('R_mu').value
-var R_sigma = document.getElementById('R_sigma').value
-var raise_killing = document.getElementById('raise_killing').value
-var chemo_effect = document.getElementById('chemo_effect').value / 10
-var n_patients = document.getElementById('n_patients').value
 var current_model = document.getElementById("model").value
+set_model_defaults(current_model);
+// var R_mu = document.getElementById('R_mu').value
+// var R_sigma = document.getElementById('R_sigma').value
+// var raise_killing = document.getElementById('raise_killing').value
+// var chemo_effect = document.getElementById('chemo_effect').value
+// var n_patients = document.getElementById('n_patients').value
 simulation_fn = get_simulation_fn(current_model)
 
 var svg = d3.select("#my_dataviz")
@@ -286,7 +287,7 @@ d3.select("#imm_effect_value").on("change", function(d){
 
 
 d3.select("#chemo_effect").on("change", function(d){
-	chemo_effect = this.value/10;
+	chemo_effect = this.value;
 	cancel_sim(timeout_ids);
 	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
@@ -294,8 +295,7 @@ d3.select("#chemo_effect_value").on("change", function(d){
 	chemo_effect = this.value;
 	if (chemo_effect > 1){
 		chemo_effect = 1;
-		document.getElementById('chemo_effect').max = 10;
-		document.getElementById('chemo_effect').value = 10;
+		document.getElementById('chemo_effect').value = 1;
 		document.getElementById('chemo_effect_value').value = 1;
 	}
 	cancel_sim(timeout_ids);
@@ -317,6 +317,7 @@ d3.select("#model").on("change", function(d){
 	current_model = this.value
 	simulation_fn = get_simulation_fn(current_model);
 	cancel_sim(timeout_ids);
+	set_model_defaults(current_model);
 
 	[death_times_treat, death_times_placebo, timeout_ids] = plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n_patients);
 })
@@ -328,6 +329,7 @@ function cancel_sim(timeout_ids){
 }
 
 function plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n){
+	console.log("Running simulation for model: " + current_model + ", R mean: " + R_mu + ", R sigma: " + R_sigma + ", Immuno effect: " + raise_killing + ", chemo effect: " + chemo_effect + ", patients: " + n);
 	let death_times_treat = [];
 	let death_times_placebo = [];
 	let fun_calls = [];
