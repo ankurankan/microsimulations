@@ -110,7 +110,7 @@ svg.append('text')
 
 function plot(data_placebo, data_treat, no_at_risk, median_survival, data_progress) {
   // Delete the previous lines
-  svg.selectAll('.mypath, .mypath_prog').remove();
+  svg.selectAll('.mypath, .mypath_prog, .mypath_dashed').remove();
 
   // Plot the median lines
   var median_treatment = svg
@@ -334,7 +334,6 @@ function plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n){
 	
 	function get_next_patient(){
 		svg.selectAll('.no_at_risk_text').remove();
-		svg.selectAll('.mypath_dashed').remove();
 		let no_at_risk = {"placebo":[], "treatment": []};
 
 		// Get the survival values
