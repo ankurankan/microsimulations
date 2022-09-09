@@ -353,9 +353,6 @@ function plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n){
 			no_at_risk['placebo'].push(array_sum(vectorCompareEqual(death_times_placebo, NO_AT_RISK_TIMEPOINTS[i])));
 		}
 
-		// Compute median survivals
-		median_survival = {'placebo': median(death_times_placebo), 'treatment': median(death_times_treat)};
-
 		// Compute mean survivals
 		document.getElementById('mean_survival_placebo').innerHTML = mean(death_times_placebo, 25);
 		document.getElementById('mean_survival_treatment').innerHTML = mean(death_times_treat, 25);
@@ -378,6 +375,9 @@ function plot_pop(simulation_fn, R_mu, R_sigma, raise_killing, chemo_effect, n){
 			}
 		}
 		d2.push([MAX_X_VALUE, array_sum(death_times_placebo.map(i => i > MAX_X_VALUE? 1: 0))/death_times_placebo.length]);
+		
+		// Compute median survivals
+		median_survival = {'placebo': median(death_times_placebo), 'treatment': median(death_times_treat)};
 
 		data_progress = [[0, 1.05], [((n_patients-n)/n_patients)*MAX_X_VALUE, 1.05]]
 		plot(d2, d1, no_at_risk, median_survival, data_progress);

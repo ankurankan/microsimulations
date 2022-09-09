@@ -66,17 +66,16 @@ function distance(x, y){
 }
 
 /**
- * Compute the median of the array `numbers`
+ * Compute the median of the a sorted array `sorted_num`
  */
-function median(numbers) {
-    const sorted = Array.from(numbers).sort((a, b) => a - b);
-    const middle = Math.floor(sorted.length / 2);
+function median(sorted_num) {
+    const middle = Math.floor(sorted_num.length / 2);
 
-    if (sorted.length % 2 === 0) {
-        return (sorted[middle - 1] + sorted[middle]) / 2;
+    if (sorted_num.length % 2 === 0) {
+        return (sorted_num[middle - 1] + sorted_num[middle]) / 2;
     }
 
-    return sorted[middle];
+    return sorted_num[middle];
 }
 
 /**
